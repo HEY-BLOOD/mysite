@@ -21,5 +21,7 @@ urlpatterns = [
     # 配置 article 应用的分发路由
     path('article/', include('article.urls', namespace='article')),
     # 用户管理
-    path('userprofile/', include('userprofile.urls', namespace='userprofile'))
+    path('userprofile/', include('userprofile.urls', namespace='userprofile')),
+    # 密码重置
+    path('password-reset/', include('password_reset.urls')),
 ]
