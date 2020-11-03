@@ -123,6 +123,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+# 媒体文件地址
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # SMTP服务器配置，以 QQ邮箱为例（不要上传到开源平台）
 EMAIL_HOST = 'smtp.qq.com'
 # 改为自己的邮箱名
