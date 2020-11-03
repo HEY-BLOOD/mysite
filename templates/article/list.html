@@ -31,6 +31,8 @@
                     <a href="{% url 'article:article_detail' article.id %}" class="btn btn-primary">阅读本文</a>
                 </div>
             </div>
+            {% empty %}
+            <p>还没有发布任何文章。</p>
         </div>
         {% endfor %}
 
