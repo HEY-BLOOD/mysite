@@ -2,6 +2,7 @@ from django.shortcuts import render
 # 导入 HttpResponse 模块
 from django.http import HttpResponse
 from .models import ArticlePost
+import markdown
 
 
 # Create your views here.
@@ -18,6 +19,15 @@ def article_detail(request, id):
     """ 文章详情 """
     # 取出相应的文章
     article = ArticlePost.objects.get(id=id)
+    # 将markdown语法渲染成html样式
+    article.body = markdown.markdown(
+        article.body,
+        extensions=[
+            # 包含 缩写、表格等常用扩展
+            'markdown.extensions.extra',
+            # 语法高亮扩展
+            'markdown.extensions.codehilite',
+        ])
     # 需要传递给模板的对象
     context = {'article': article}
     # 载入模板，并返回context对象
