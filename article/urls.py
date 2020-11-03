@@ -9,4 +9,6 @@ urlpatterns = [
     path('article-list/', views.article_list, name='article_list'),
     # 文章详情，Django2.0的 path新语法用尖括号<>定义需要传递的参数。
     path('article-detail/<int:id>/', views.article_detail, name='article_detail'),
+    # 写文章
+    path('article-create/', views.article_create, name='article_create'),
 ]
