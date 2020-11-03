@@ -27,6 +27,8 @@
                         {{ user.username }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <!-- 删除用户 -->
+                        <a class="dropdown-item" href="#" onclick="user_delete()">注销账号</a>
                         <a class="dropdown-item" href="{% url 'userprofile:logout' %}">退出登录</a>
                     </div>
                 </li>
@@ -42,3 +44,24 @@
 
     </div>
 </nav>
+
+<!-- 提交删除用户的 POST请求 -->
+{% if user.is_authenticated %}
+<form style="display:none;" id="user_delete" action="{% url 'userprofile:delete' user.id %}" method="POST">
+    {% csrf_token %}
+    <button type="submit">发送</button>
+</form>
+<script>
+    function user_delete() {
+        // 调用layer弹窗组件
+        layer.open({
+            title: "确认注销",
+            content: "确认注销账号吗？注册后一切账号信息都将消失。",
+            yes: function (index, layero) {
+                $('form#user_delete button').click();
+                layer.close(index);
+            },
+        })
+    }
+</script>
+{% endif %}
