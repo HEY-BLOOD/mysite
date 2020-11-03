@@ -18,6 +18,7 @@
         <div class="col-12 alert alert-success">作者：{{ article.author }}
             <!-- 防范CSRF攻击，即删除文章时用POST方法，并且校验csrf令牌 -->
             · <a href="#" onclick="confirm_delete()">删除文章</a>
+            · <a href="{% url "article:article_update" article.id %}">编辑文章</a>
         </div>
         <!-- 新增一个隐藏的表单，用于安全删除文章 -->
         <form style="display:none;" id="safe_delete" action="{% url 'article:article_safe_delete' article.id %}"
