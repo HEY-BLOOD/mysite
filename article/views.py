@@ -1,13 +1,15 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 from django.http import HttpResponse
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 # 引入分页模块
 from django.core.paginator import Paginator
-from .models import ArticlePost
-from .forms import ArticlePostForm
 # 引入 Q 对象，用于同时对模型多个字段进行搜索
 from django.db.models import Q
+
+from .models import ArticlePost
+from .forms import ArticlePostForm
+from comment.models import Comment
 import markdown
 
 
@@ -51,6 +53,9 @@ def article_detail(request, id):
     # 取出相应的文章
     article = ArticlePost.objects.get(id=id)
 
+    # 取出文章评论
+    comments = Comment.objects.filter(article=id)
+
     # 将浏览量 +1并更新
     article.total_views += 1
     article.save(update_fields=['total_views'])
@@ -66,8 +71,8 @@ def article_detail(request, id):
     ])
     # 将正文渲染为 html文本
     article.body = md.convert(article.body)
-    # 需要传递给模板的对象
-    context = {'article': article, 'toc': md.toc}
+    # 模板上下文；文章、正文目录、文章评论
+    context = {'article': article, 'toc': md.toc, 'comments': comments}
     # 载入模板，并返回context对象
     return render(request, 'article/detail.html', context)
 

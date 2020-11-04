@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'article',  # 注册 article 应用
     'userprofile',  # 用户管理应用
     'password_reset',  # 密码重置
+    'comment',  # 评论应用
 ]
 
 MIDDLEWARE = [
@@ -105,7 +106,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# 设置上海的时区，之前的是 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 

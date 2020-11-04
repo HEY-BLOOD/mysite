@@ -1,6 +1,8 @@
 from django.db import models
 # 导入内建的User模型。
 from django.contrib.auth.models import User
+# reserse() 反向解析 URL 地址
+from django.urls import reverse
 # timezone 用于处理时间相关事务。
 from django.utils import timezone
 
@@ -20,6 +22,10 @@ class ArticlePost(models.Model):
     updated = models.DateTimeField(auto_now=True)
     # 文章浏览量，PositiveIntegerField是用于存储正整数的字段
     total_views = models.PositiveIntegerField(default=0)
+
+    # 获取文章地址
+    def get_absolute_url(self):
+        return reverse('article:article_detail', args=[self.id])
 
     # 内部类 class Meta 用于给 model 定义元数据
     class Meta:
