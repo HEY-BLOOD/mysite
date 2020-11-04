@@ -132,3 +132,4 @@ dmypy.json
 .vscode/
 mysite/smtpconf.py
 media/
+secretkey.txt

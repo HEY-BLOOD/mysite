@@ -1,5 +1,7 @@
 {% extends "base.html" %} {% load staticfiles %}
+
 {% block title %} 用户注册 {% endblock title %}
+
 {% block content %}
 <div class="container">
     <div class="row">
@@ -10,7 +12,7 @@
                 <!-- 账号 -->
                 <div class="form-group col-md-4">
                     <label for="username">昵称</label>
-                    <!-- required属性，字段为空就不能提交，并提示用户填写。 -->
+                    {# required属性，字段为空就不能提交，并提示用户填写。 #}
                     <input type="text" class="form-control" id="username" name="username" required>
                 </div>
                 <!-- 邮箱 -->

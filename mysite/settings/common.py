@@ -12,24 +12,15 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 # 导入 SMTP服务的配置
-from . import smtpconf
+# from . import smtpconf
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'y07_8ugz0zukhi6+-=anbwlpuo#se&z=i#iu6de8_9qceu*a!6'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -125,8 +116,13 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+# 静态文件收集目录
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
+
 # 媒体文件地址
 MEDIA_URL = '/media/'
+
+# 媒体文件存放位置
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # SMTP服务器配置，以 QQ邮箱为例（不要上传到开源平台）

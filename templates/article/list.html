@@ -1,13 +1,13 @@
-<!-- extends表明此页面继承自 base.html 文件 -->
+{# extends表明此页面继承自 base.html 文件 #}
 {% extends "base.html" %}
 {% load staticfiles %}
 
-<!-- 写入 base.html 中定义的 title -->
+{# 写入 base.html 中定义的 title #}
 {% block title %}
 首页
 {% endblock title %}
 
-<!-- 写入 base.html 中定义的 content -->
+{# 写入 base.html 中定义的 content #}
 {% block content %}
 
 <!-- 定义放置文章标题的div容器 -->
@@ -15,15 +15,13 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <!-- 文章列表页面默认按照发布时间排序降序排列 -->
-                <!-- 添加 search参数 -->
+                {# 文章列表页面默认按照发布时间排序降序排列，添加 search参数 #}
                 <a href="{% url 'article:article_list' %}?search={{ search }}">
                     最新
                 </a>
             </li>
             <li class="breadcrumb-item">
-                <!-- 指定order参数按热度（浏览量）降序排序 -->
-                <!-- 添加 search参数 -->
+                {# 指定order参数按热度（浏览量）降序排序，添加 search参数 #}
                 <a href="{% url 'article:article_list' %}?order=total_views&search={{ search }}">
                     最热
                 </a>
@@ -60,13 +58,13 @@
             <div class="card h-100">
                 <!-- 标题 -->
                 <h4 class="card-header">{{ article.title }}</h4>
-                <!-- 摘要，Django的过滤器语法，表示取出正文的前100个字符，避免摘要太长。 -->
+                {# 摘要，Django的过滤器语法，表示取出正文的前100个字符，避免摘要太长。 #}
                 <div class="card-body">
                     <p class="card-text">{{ article.body|slice:':100' }}...</p>
                 </div>
                 <!-- 注脚 -->
                 <div class="card-footer">
-                    <!-- 根据 app名称和 url名称，解析 url地址 -->
+                    {#ss 根据 app名称和 url名称，解析 url地址 #}
                     <a href="{% url 'article:article_detail' article.id %}" class="btn btn-primary">阅读本文</a>
                 </div>
                 <!-- 显示浏览量 -->
@@ -89,7 +87,7 @@
 <div class="pagination">
     <div class="m-auto">
         <span class="step-links">
-            <!-- 如果不是第一页，则显示上翻按钮 -->
+            {# 如果不是第一页，则显示上翻按钮 #}
             {% if articles.has_previous %}
             <a href="?page=1&order={{ order }}&search={{ search }}" class="btn btn-success">
                 &laquo; 1
@@ -101,12 +99,12 @@
             </a>
             {% endif %}
 
-            <!-- 当前页面 -->
+            {# 当前页码 #}
             <span class="current btn btn-danger btn-lg">
                 {{ articles.number }}
             </span>
 
-            <!-- 如果不是最末页，则显示下翻按钮 -->
+            {# 如果不是最末页，则显示下翻按钮 #}
             {% if articles.has_next %}
             <a href="?page={{ articles.next_page_number }}&order={{ order }}&search={{ search }}"
                 class="btn btn-secondary">

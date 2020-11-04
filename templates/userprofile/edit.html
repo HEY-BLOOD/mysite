@@ -1,5 +1,7 @@
 {% extends "base.html" %} {% load staticfiles %}
+
 {% block title %} 用户信息 {% endblock title %}
+
 {% block content %}
 <div class="container">
     <div class="row">
@@ -14,7 +16,7 @@
             <h5 class="col-md-4">暂无头像</h5>
             {% endif %}
             <br>
-            <!-- 表单必须设置enctype="multipart/form-data"属性，才能够正确上传图片等文件。 -->
+            {# 表单必须设置enctype="multipart/form-data"属性，才能够正确上传图片等文件。 #}
             <form method="post" action="." enctype="multipart/form-data">
                 {% csrf_token %}
                 <!-- avatar -->

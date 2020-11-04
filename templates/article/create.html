@@ -1,8 +1,10 @@
 <!-- extends表明此页面继承自 base.html 文件 -->
 {% extends "base.html" %} {% load staticfiles %}
-<!-- 写入 base.html 中定义的 title -->
+
+{# 写入 base.html 中定义的 title #}
 {% block title %} 写文章 {% endblock title %}
-<!-- 写入 base.html 中定义的 content -->
+
+{# 写入 base.html 中定义的 content #}
 {% block content %}
 <!-- 写文章表单 -->
 <div class="container">
@@ -11,7 +13,7 @@
             <br>
             <!-- 提交文章的表单 -->
             <form method="post" action=".">
-                <!-- Django中需要POST数据的地方都必须有csrf_token -->
+                {# Django中需要POST数据的地方都必须有csrf_token #}
                 {% csrf_token %}
                 <!-- 文章标题 -->
                 <div class="form-group">
