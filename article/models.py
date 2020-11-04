@@ -4,9 +4,8 @@ from django.contrib.auth.models import User
 # timezone 用于处理时间相关事务。
 from django.utils import timezone
 
+
 # Create your models here.
-
-
 class ArticlePost(models.Model):
     """ 博客文章数据模型 """
     # 文章作者。参数 on_delete 用于指定数据删除的方式（级联删除）

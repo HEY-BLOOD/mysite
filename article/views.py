@@ -6,25 +6,34 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from .models import ArticlePost
 from .forms import ArticlePostForm
+# 引入 Q 对象，用于同时对模型多个字段进行搜索
+from django.db.models import Q
 import markdown
 
 
 # Create your views here.
 def article_list(request):
     """ 文章列表 """
-    # 取出所有博客文章，修改变量名称（articles -> article_list）
-    article_list = ArticlePost.objects.all()
-
-    # 根据 GET请求中查询条件，返回不同排序的对象数组
-    # order_by()方法对整数字段 total_views进行排序，‘total_views’为正序，‘-total_views’为逆序
-    if request.GET.get('order') == 'total_views':
-        article_list = ArticlePost.objects.all().order_by('-total_views')
-        order = 'total_views'
+    # 获取请求中的搜索关键字和排序参数
+    search = request.GET.get('search')
+    order = request.GET.get('order')
+    # 用户搜索逻辑
+    if search:
+        if order == 'total_views':
+            # 用 Q对象对所有文章的标题和内容进行联合搜索；icontains不区分大小写，对应的contains区分大小写
+            article_list = ArticlePost.objects.filter(Q(title__contains=search)
+                                                      | Q(body__contains=search)).order_by('-total_views')
+        else:
+            article_list = ArticlePost.objects.filter(Q(title__contains=search) | Q(body__contains=search))
     else:
-        article_list = ArticlePost.objects.all()
-        order = 'normal'
+        # 将 search 参数重置为空，因为 search参数为空的时值为 None，传递到模板中会错误地转换成"None"字符串
+        search = ''
+        if order == 'total_views':
+            article_list = ArticlePost.objects.all().order_by('-total_views')
+        else:
+            article_list = ArticlePost.objects.all()
 
-    # 每页显示 1 篇文章
+    # 每页显示 12 篇文章
     paginator = Paginator(article_list, 12)
     # 获取 url 中的页码
     page = request.GET.get('page')
@@ -32,7 +41,7 @@ def article_list(request):
     articles = paginator.get_page(page)
 
     # 需要传递给模板（templates）的对象
-    context = {'articles': articles, 'order': order}
+    context = {'articles': articles, 'order': order, 'search': search}
     # render函数：载入模板，并返回context对象
     return render(request, 'article/list.html', context)
 

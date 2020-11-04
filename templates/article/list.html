@@ -16,20 +16,43 @@
         <ol class="breadcrumb .nav-pills">
             <li class="breadcrumb-item">
                 <!-- 文章列表页面默认按照发布时间排序降序排列 -->
-                <a href="{% url 'article:article_list' %}">
+                <!-- 添加 search参数 -->
+                <a href="{% url 'article:article_list' %}?search={{ search }}">
                     最新
                 </a>
             </li>
             <li class="breadcrumb-item">
-                <!-- 指定order参数按热度（浏览量）降序排序，参数为 -total_views 则表示降序 -->
-                <a href="{% url 'article:article_list' %}?order=total_views">
+                <!-- 指定order参数按热度（浏览量）降序排序 -->
+                <!-- 添加 search参数 -->
+                <a href="{% url 'article:article_list' %}?order=total_views&search={{ search }}">
                     最热
                 </a>
             </li>
         </ol>
     </nav>
-    <div class="row mt-2">
 
+    <!-- 新增，搜索栏 -->
+    <div class="row">
+        <div class="col-auto mr-auto">
+            <form class="form-inline">
+                <label class="sr-only">content</label>
+                <input type="text" class="form-control mb-2 mr-sm-2" name="search" placeholder="搜索文章..." required>
+            </form>
+        </div>
+    </div>
+
+    <!-- 新增，搜索提示语 -->
+    {% if search %}
+    {% if articles %}
+    <h4><span style="color: red">"{{ search }}"</span>的搜索结果如下：</h4>
+    <hr>
+    {% else %}
+    <h4>暂无<span style="color: red">"{{ search }}"</span>有关的文章。</h4>
+    <hr>
+    {% endif %}
+    {% endif %}
+
+    <div class="row mt-2">
         {% for article in articles %}
         <!-- 文章内容 -->
         <div class="col-4 mb-4">
@@ -58,20 +81,22 @@
         <p>还没有发布任何文章。</p>
         {% endfor %}
     </div>
+
 </div>
 
 
 <!-- 页码导航 -->
-<div class="pagination row">
+<div class="pagination">
     <div class="m-auto">
         <span class="step-links">
             <!-- 如果不是第一页，则显示上翻按钮 -->
             {% if articles.has_previous %}
-            <a href="?page=1" class="btn btn-success">
+            <a href="?page=1&order={{ order }}&search={{ search }}" class="btn btn-success">
                 &laquo; 1
             </a>
             <span>...</span>
-            <a href="?page={{ articles.previous_page_number }}" class="btn btn-secondary">
+            <a href="?page={{ articles.previous_page_number }}&order={{ order }}&search={{ search }}"
+                class="btn btn-secondary">
                 {{ articles.previous_page_number }}
             </a>
             {% endif %}
@@ -83,15 +108,18 @@
 
             <!-- 如果不是最末页，则显示下翻按钮 -->
             {% if articles.has_next %}
-            <a href="?page={{ articles.next_page_number }}" class="btn btn-secondary">
+            <a href="?page={{ articles.next_page_number }}&order={{ order }}&search={{ search }}"
+                class="btn btn-secondary">
                 {{ articles.next_page_number }}
             </a>
             <span>...</span>
-            <a href="?page={{ articles.paginator.num_pages }}" class="btn btn-success">
+            <a href="?page={{ articles.paginator.num_pages }}&order={{ order }}&search={{ search }}"
+                class="btn btn-success">
                 {{ articles.paginator.num_pages }} &raquo;
             </a>
             {% endif %}
         </span>
     </div>
 </div>
+
 {% endblock content %}
