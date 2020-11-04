@@ -15,6 +15,15 @@ def article_list(request):
     # 取出所有博客文章，修改变量名称（articles -> article_list）
     article_list = ArticlePost.objects.all()
 
+    # 根据 GET请求中查询条件，返回不同排序的对象数组
+    # order_by()方法对整数字段 total_views进行排序，‘total_views’为正序，‘-total_views’为逆序
+    if request.GET.get('order') == 'total_views':
+        article_list = ArticlePost.objects.all().order_by('-total_views')
+        order = 'total_views'
+    else:
+        article_list = ArticlePost.objects.all()
+        order = 'normal'
+
     # 每页显示 1 篇文章
     paginator = Paginator(article_list, 12)
     # 获取 url 中的页码
@@ -23,7 +32,7 @@ def article_list(request):
     articles = paginator.get_page(page)
 
     # 需要传递给模板（templates）的对象
-    context = {'articles': articles}
+    context = {'articles': articles, 'order': order}
     # render函数：载入模板，并返回context对象
     return render(request, 'article/list.html', context)
 

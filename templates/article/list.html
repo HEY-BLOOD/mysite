@@ -12,6 +12,22 @@
 
 <!-- 定义放置文章标题的div容器 -->
 <div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb .nav-pills">
+            <li class="breadcrumb-item">
+                <!-- 文章列表页面默认按照发布时间排序降序排列 -->
+                <a href="{% url 'article:article_list' %}">
+                    最新
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <!-- 指定order参数按热度（浏览量）降序排序，参数为 -total_views 则表示降序 -->
+                <a href="{% url 'article:article_list' %}?order=total_views">
+                    最热
+                </a>
+            </li>
+        </ol>
+    </nav>
     <div class="row mt-2">
 
         {% for article in articles %}
