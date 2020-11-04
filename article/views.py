@@ -32,6 +32,11 @@ def article_detail(request, id):
     """ 文章详情 """
     # 取出相应的文章
     article = ArticlePost.objects.get(id=id)
+
+    # 将浏览量 +1并更新
+    article.total_views += 1
+    article.save(update_fields=['total_views'])
+
     # 将markdown语法渲染成html样式
     article.body = markdown.markdown(
         article.body,
@@ -84,6 +89,9 @@ def article_delete(request, id):
     """ 删除文章 """
     # 根据 id（主键）获取需要删除的文章
     article = ArticlePost.objects.get(id=id)
+    # 过滤已登录、但非文章作者的用户
+    if request.user != article.author:
+        return HttpResponse("抱歉，你无权修改这篇文章。")
     # 调用.delete()方法删除文章
     article.delete()
     # 完成删除后返回文章列表
@@ -111,6 +119,10 @@ def article_update(request, id):
     """
     # 获取需要修改的具体文章对象
     article = ArticlePost.objects.get(id=id)
+
+    # 过滤已登录、但非文章作者的用户
+    if request.user != article.author:
+        return HttpResponse("抱歉，你无权修改这篇文章。")
 
     # 判断用户是否为 POST 提交表单数据
     if request.method == "POST":
