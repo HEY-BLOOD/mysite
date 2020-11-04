@@ -16,7 +16,7 @@ def article_list(request):
     article_list = ArticlePost.objects.all()
 
     # 每页显示 1 篇文章
-    paginator = Paginator(article_list, 2)
+    paginator = Paginator(article_list, 12)
     # 获取 url 中的页码
     page = request.GET.get('page')
     # 将导航对象相应的页码内容返回给 articles

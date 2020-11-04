@@ -131,3 +131,4 @@ dmypy.json
 # custom
 .vscode/
 mysite/smtpconf.py
+media/
