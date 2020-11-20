@@ -10,7 +10,8 @@ class ProfileInline(admin.StackedInline):
     """ 定义一个行内 admin，可以被内嵌到其它 Admin """
     model = Profile
     can_delete = False
-    verbose_name_plural = 'UserProfile'
+    verbose_name = '扩展信息'
+    verbose_name_plural = '扩展信息'
 
 
 # 将 Profile 关联到 User 中

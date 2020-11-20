@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+
 # 引入内置信号
 # from django.db.models.signals import post_save
 # 引入信号接收器的装饰器
@@ -10,13 +11,21 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     """ 用户扩展信息 """
     # 与 User 模型构成一对一的关系
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(User,
+                                on_delete=models.CASCADE,
+                                related_name='profile',
+                                verbose_name='用户')
     # 电话号码字段
-    phone = models.CharField(max_length=20, blank=True)
+    phone = models.CharField('联系电话', max_length=20, blank=True)
     # 头像
-    avatar = models.ImageField(upload_to='avatar/%Y%m%d/', blank=True)
+    avatar = models.ImageField('用户头像', upload_to='avatar/%Y%m%d/', blank=True)
     # 个人简介
-    bio = models.TextField(max_length=500, blank=True)
+    bio = models.TextField('个人简介', max_length=500, blank=True)
+
+    class Meta:
+        # db_table = "tb_comment"
+        verbose_name = '扩展信息'
+        verbose_name_plural = verbose_name
 
     def __str__(self):
         return 'user {}'.format(self.user.username)

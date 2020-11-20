@@ -1,9 +1,7 @@
 from .common import *
-import os
 
-# Use a separate file for the secret key
-with open(os.path.join(BASE_DIR, 'secretkey.txt')) as f:
-    SECRET_KEY = f.read().strip()
+# Raises django's ImproperlyConfigured exception if SECRET_KEY not in os.environ
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False

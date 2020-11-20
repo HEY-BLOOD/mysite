@@ -11,11 +11,18 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-# 导入 SMTP服务的配置
-# from . import smtpconf
+import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# initialize env
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False))
+
+# reading .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -28,10 +35,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'article',  # 注册 article 应用
-    'userprofile',  # 用户管理应用
+    'article.apps.ArticleConfig',  # 注册 article 应用
+    'userprofile.apps.UserprofileConfig',  # 用户管理应用
     'password_reset',  # 密码重置
-    'comment',  # 评论应用
+    'comment.apps.CommentConfig',  # 评论应用
 ]
 
 MIDDLEWARE = [
@@ -79,7 +86,8 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
@@ -95,7 +103,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+# 默认语言 en-us
+LANGUAGE_CODE = 'zh-Hans'
 
 # 设置上海的时区，之前的是 'UTC'
 TIME_ZONE = 'Asia/Shanghai'
@@ -128,12 +137,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # SMTP服务器配置，以 QQ邮箱为例（不要上传到开源平台）
 EMAIL_HOST = 'smtp.qq.com'
 # 改为自己的邮箱名
-EMAIL_HOST_USER = 'your_email_account@xxx.com'
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 # 邮箱密码（授权码）
-EMAIL_HOST_PASSWORD = 'your_password'
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 # 发送邮件的端口，不通请尝试 465 或 587 端口。
-EMAIL_PORT = 25
+EMAIL_PORT = env('EMAIL_PORT')
 # 是否使用 TLS
-EMAIL_USE_TLS = True
+EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 # 默认的发件人
-DEFAULT_FROM_EMAIL = '发件人昵称 <your_email_account@xxx.com>'
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')

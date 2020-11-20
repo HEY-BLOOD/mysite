@@ -6,6 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 # 引入 Q 对象，用于同时对模型多个字段进行搜索
 from django.db.models import Q
+# 通用类视图
+from django.views import View
+from django.views.generic import ListView, DetailView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from .models import ArticlePost
 from .forms import ArticlePostForm
@@ -14,6 +18,62 @@ import markdown
 
 
 # Create your views here.
+class ContextMixin(View):
+    """
+    Mixin
+    """
+    def get_context_data(self, **kwargs):
+        # 获取原有的上下文
+        context = super().get_context_data(**kwargs)
+        # 增加新上下文
+        context['order'] = 'total_views'
+
+        return context
+
+
+class ArticleListView(ContextMixin, ListView):
+    """
+    文章列表类视图
+    """
+    # 查询集的名称（上下文的名称）
+    context_object_name = 'articles'
+    # 查询集
+    # queryset = ArticlePost.objects.all()
+    # 模板位置
+    template_name = 'article/list.html'
+
+    # def get_queryset(self):
+    #     """
+    #     查询集
+    #     """
+    #     queryset = ArticlePost.objects.filter(title='Python')
+    #     return queryset
+
+    def get_queryset(self):
+        # 获取请求中的搜索关键字和排序参数
+        search = self.request.GET.get('search')
+        order = self.request.GET.get('order')
+        # 用户搜索逻辑
+        if search:
+            if order == 'total_views':
+                # 用 Q对象对所有文章的标题和内容进行联合搜索；icontains不区分大小写，对应的contains区分大小写
+                article_list = ArticlePost.objects.filter(
+                    Q(title__contains=search)
+                    | Q(body__contains=search)).order_by('-total_views')
+            else:
+                article_list = ArticlePost.objects.filter(
+                    Q(title__contains=search) | Q(body__contains=search))
+        else:
+            # 将 search 参数重置为空，因为 search参数为空的时值为 None，传递到模板中会错误地转换成"None"字符串
+            search = ''
+            if order == 'total_views':
+                article_list = ArticlePost.objects.all().order_by('-total_views')
+            else:
+                article_list = ArticlePost.objects.all()
+
+        return article_list
+
+
 def article_list(request):
     """ 文章列表 """
     # 获取请求中的搜索关键字和排序参数
@@ -23,10 +83,12 @@ def article_list(request):
     if search:
         if order == 'total_views':
             # 用 Q对象对所有文章的标题和内容进行联合搜索；icontains不区分大小写，对应的contains区分大小写
-            article_list = ArticlePost.objects.filter(Q(title__contains=search)
-                                                      | Q(body__contains=search)).order_by('-total_views')
+            article_list = ArticlePost.objects.filter(
+                Q(title__contains=search)
+                | Q(body__contains=search)).order_by('-total_views')
         else:
-            article_list = ArticlePost.objects.filter(Q(title__contains=search) | Q(body__contains=search))
+            article_list = ArticlePost.objects.filter(
+                Q(title__contains=search) | Q(body__contains=search))
     else:
         # 将 search 参数重置为空，因为 search参数为空的时值为 None，传递到模板中会错误地转换成"None"字符串
         search = ''
@@ -46,6 +108,27 @@ def article_list(request):
     context = {'articles': articles, 'order': order, 'search': search}
     # render函数：载入模板，并返回context对象
     return render(request, 'article/list.html', context)
+
+
+class ArticleDetailView(DetailView):
+    """
+    文章详情类视图
+    """
+    queryset = ArticlePost.objects.all()
+    context_object_name = 'article'
+    template_name = 'article/detail.html'
+
+    def get_object(self):
+        """
+        获取需要展示的对象
+        """
+        # 首先调用父类的方法
+        obj = super(ArticleDetailView, self).get_object()
+        # 浏览量 +1
+        obj.total_views += 1
+        # 提交更改
+        obj.save(update_fields=['total_views'])
+        return obj
 
 
 def article_detail(request, id):
@@ -75,6 +158,17 @@ def article_detail(request, id):
     context = {'article': article, 'toc': md.toc, 'comments': comments}
     # 载入模板，并返回context对象
     return render(request, 'article/detail.html', context)
+
+
+class ArticleCreateView(CreateView):
+    """
+    创建文章的类视图
+    """
+    model = ArticlePost
+    fields = '__all__'
+    # 或者有选择的提交字段，比如：
+    # fields = ['title']
+    template_name = 'article/create.html'
 
 
 @login_required(login_url='/userprofile/login/')

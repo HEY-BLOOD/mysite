@@ -11,7 +11,7 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-# 更改使用WSGI协议时的配置
+# 更改使用 WSGI协议时的配置
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings.production')
 
 application = get_wsgi_application()
