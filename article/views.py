@@ -76,37 +76,49 @@ class ArticleListView(ContextMixin, ListView):
 
 def article_list(request):
     """ 文章列表 """
-    # 获取请求中的搜索关键字和排序参数
-    search = request.GET.get('search')
-    order = request.GET.get('order')
-    # 用户搜索逻辑
-    if search:
-        if order == 'total_views':
-            # 用 Q对象对所有文章的标题和内容进行联合搜索；icontains不区分大小写，对应的contains区分大小写
-            article_list = ArticlePost.objects.filter(
-                Q(title__contains=search)
-                | Q(body__contains=search)).order_by('-total_views')
-        else:
-            article_list = ArticlePost.objects.filter(
-                Q(title__contains=search) | Q(body__contains=search))
-    else:
-        # 将 search 参数重置为空，因为 search参数为空的时值为 None，传递到模板中会错误地转换成"None"字符串
-        search = ''
-        if order == 'total_views':
-            article_list = ArticlePost.objects.all().order_by('-total_views')
-        else:
-            article_list = ArticlePost.objects.all()
+    # 从 url 中提取查询参数
+    search = request.GET.get('search')  # 标题和正文查询关键字
+    order = request.GET.get('order')  # 排序
+    column = request.GET.get('column')  # 栏目、类别
+    tag = request.GET.get('tag')  # 标签
 
-    # 每页显示 12 篇文章
-    paginator = Paginator(article_list, 12)
-    # 获取 url 中的页码
+    # 初始化查询集
+    article_list = ArticlePost.objects.all()
+
+    # 搜索查询集
+    if search:
+        article_list = article_list.filter(
+            Q(title__icontains=search) | Q(body__icontains=search))
+    else:
+        search = ''
+
+    # 栏目查询集
+    if column is not None and column.isdigit():
+        article_list = article_list.filter(column=column)
+
+    # 标签查询集；
+    # 注意Django-taggit中标签过滤的写法：filter(tags__name__in=[tag])，意思是在tags字段中过滤name为tag的数据条目。赋值的字符串tag用方括号包起来。
+    # 之所以这样写是因为Django-taggit还支持多标签的联合查询，比如：Model.objects.filter(tags__name__in=["tag1", "tag2"])
+    if tag and tag != 'None':
+        article_list = article_list.filter(tags__name__in=[tag])
+
+    # 查询集排序
+    if order == 'total_views':
+        article_list = article_list.order_by('-total_views')
+
+    paginator = Paginator(article_list, 10)
     page = request.GET.get('page')
-    # 将导航对象相应的页码内容返回给 articles
     articles = paginator.get_page(page)
 
     # 需要传递给模板（templates）的对象
-    context = {'articles': articles, 'order': order, 'search': search}
-    # render函数：载入模板，并返回context对象
+    context = {
+        'articles': articles,
+        'order': order,
+        'search': search,
+        'column': column,
+        'tag': tag,
+    }
+
     return render(request, 'article/list.html', context)
 
 
@@ -191,6 +203,8 @@ def article_create(request):
                 new_article.column = ArticleColumn.objects.get(id=request.POST['column'])
             # 将新文章保存到数据库中
             new_article.save()
+            # 新增代码，保存文章标签 tags 的多对多关系
+            article_post_form.save_m2m()
             # 完成后返回到文章列表，反向解析 URL地址
             return redirect("article:article_list")
         # 如果数据不合法，返回错误信息

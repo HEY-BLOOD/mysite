@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'userprofile.apps.UserprofileConfig',  # 用户管理应用
     'password_reset',  # 密码重置
     'comment.apps.CommentConfig',  # 评论应用
+    'taggit',  # 标签功能
 ]
 
 MIDDLEWARE = [

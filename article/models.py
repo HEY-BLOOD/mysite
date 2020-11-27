@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 # timezone 用于处理时间相关事务。
 from django.utils import timezone
+# Django-taggit 标签功能模块
+from taggit.managers import TaggableManager
 
 
 # Create your models here.
@@ -51,6 +53,8 @@ class ArticlePost(models.Model):
                                on_delete=models.CASCADE,
                                related_name='article',
                                verbose_name='栏目')
+    # 文章标签，多对多关系
+    tags = TaggableManager(blank=True)
 
     # 获取文章地址
     def get_absolute_url(self):
