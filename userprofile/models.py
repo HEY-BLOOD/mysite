@@ -17,7 +17,7 @@ class Profile(models.Model):
                                 verbose_name='用户')
     # 电话号码字段
     phone = models.CharField('联系电话', max_length=20, blank=True)
-    # 头像
+    # 头像，upload_to 图片上传目录（如：media/article/20190226/）
     avatar = models.ImageField('用户头像', upload_to='avatar/%Y%m%d/', blank=True)
     # 个人简介
     bio = models.TextField('个人简介', max_length=500, blank=True)

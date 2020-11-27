@@ -11,7 +11,7 @@ class ArticlePostAdmin(admin.ModelAdmin):
     list_display = ['title', 'column', 'tags', 'total_views', 'created', 'updated']
 
     # 表单字段，不要包含不可编辑的字段（如：auto_now=True的 updated字段）
-    fields = ['author', 'title', 'column', 'tags', 'body']
+    fields = ['avatar', 'author', 'title', 'column', 'tags', 'body']
 
 
 class ArticleColumnAdmin(admin.ModelAdmin):

@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'userprofile.apps.UserprofileConfig',  # 用户管理应用
     'password_reset',  # 密码重置
     'comment.apps.CommentConfig',  # 评论应用
-    'taggit',  # 标签功能
+    'taggit',  # django-taggit 标签扩展
+    'imagekit',  # django-imagekit 对模型的图片字段进行处理
 ]
 
 MIDDLEWARE = [

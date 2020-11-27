@@ -54,21 +54,29 @@
     {#  列表循环  #}
     <div class="row mt-2">
         {% for article in articles %}
+        <!-- 标题图 -->
+        {% if article.avatar %}
+        <div class="col-3">
+            <img src="{{ article.avatar.url }}" alt="标题图" style="max-width:100%; border-radius: 20px">
+        </div>
+        {% endif %}
         <!-- 文章内容 -->
-        <div class="col-12">
+        <div class="col">
             <!-- 栏目 -->
             {% if article.column %}
-            <button type="button" class="btn btn-sm mb-2
+            <a href="{% url 'article:article_list' %}?column={{ article.column.id }}" class="btn btn-sm mb-2
                         {% if article.column.title == 'Django' %}
                             btn-success
                         {% elif article.column.title == 'Java' %}
                             btn-danger
                         {% elif article.column.title == 'HTML' %}
                             btn-warning
+                        {% else %}
+                            btn-info
                         {% endif %}
                     ">
                 {{ article.column }}
-            </button>
+            </a>
             {% endif %}
             <!-- 标签 -->
             <span>
@@ -106,8 +114,8 @@
                     {{ article.updated|date:'Y-m-d' }} 更新
                 </span>
             </p>
-            <hr>
         </div>
+        <hr style="width: 100%;" />
         {% endfor %}
     </div>
 
@@ -120,7 +128,8 @@
         <span class="step-links">
             {# 如果不是第一页，则显示上翻按钮 #}
             {% if articles.has_previous %}
-            <a href="?page=1&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}" class="btn btn-success">
+            <a href="?page=1&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}"
+                class="btn btn-success">
                 &laquo; 1
             </a>
             <span>...</span>

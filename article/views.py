@@ -188,12 +188,13 @@ def article_create(request):
     """ 添加文章 """
     # 判断用户是否提交数据
     if request.method == "POST":
-        # 将提交的数据赋值到表单实例中
-        article_post_form = ArticlePostForm(data=request.POST)
+        # 将提交的数据赋值到表单实例中，增加 request.FILES
+        article_post_form = ArticlePostForm(request.POST, request.FILES)
         # 判断提交的数据是否满足模型的要求
         if article_post_form.is_valid():
             # 保存数据，但暂时不提交到数据库中
             new_article = article_post_form.save(commit=False)
+            print('new_article', new_article)
             # 指定数据库中 id=1 的用户为作者
             # 如果你进行过删除数据表的操作，可能会找不到id=1的用户
             # 此时请重新创建用户，并传入此用户的id
@@ -267,6 +268,9 @@ def article_update(request, id):
         article_post_form = ArticlePostForm(data=request.POST)
         # 判断提交的数据是否满足模型的要求
         if article_post_form.is_valid():
+            # 文章标题图
+            if request.FILES.get('avatar'):
+                article.avatar = request.FILES.get('avatar')
             # 保存新写入的 title、body 数据并保存
             article.title = request.POST['title']
             article.body = request.POST['body']
@@ -275,6 +279,8 @@ def article_update(request, id):
                 article.column = ArticleColumn.objects.get(id=request.POST['column'])
             else:
                 article.column = None
+            # 标签
+            article.tags.set(*request.POST.get('tags').split(','), clear=True)
             article.save()
             # 完成后返回到修改后的文章中。需传入文章的 id 值
             return redirect("article:article_detail", id=id)
@@ -286,12 +292,13 @@ def article_update(request, id):
     else:
         # 创建表单类实例
         article_post_form = ArticlePostForm()
-        # 赋值上下文， 当前文章对象、所有栏目，修改前的展示
+        # 赋值上下文， 当前文章、栏目、标签，修改前的展示
         columns = ArticleColumn.objects.all()
         context = {
             'article': article,
             'article_post_form': article_post_form,
             'columns': columns,
+            'tags': ','.join([x for x in article.tags.names()]),
         }
         # 将响应返回到模板中
         return render(request, 'article/update.html', context)

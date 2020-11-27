@@ -7,6 +7,11 @@ from django.urls import reverse
 from django.utils import timezone
 # Django-taggit 标签功能模块
 from taggit.managers import TaggableManager
+# 图像处理
+from PIL import Image
+# 引入imagekit，处理图片
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFit
 
 
 # Create your models here.
@@ -54,11 +59,35 @@ class ArticlePost(models.Model):
                                related_name='article',
                                verbose_name='栏目')
     # 文章标签，多对多关系
-    tags = TaggableManager(blank=True)
+    tags = TaggableManager('标签', help_text="如：文学,诗歌,青春", blank=True)
+    # 文章标题图，使用 django-imagekit，不用自己在save方法中处理图片了
+    avatar = ProcessedImageField(
+        upload_to='article/%Y%m%d',  # 上传路径（如：media/article/20190226/）
+        processors=[ResizeToFit(width=400)],  # 处理规则
+        format='JPEG',  # 存储格式
+        options={'quality': 100},  # 图片质量
+    )
 
     # 获取文章地址
     def get_absolute_url(self):
         return reverse('article:article_detail', args=[self.id])
+
+    # def save(self, *args, **kwargs):
+    #     """  model实例每次保存时调用，保存时处理文章标题图  """
+    #     # 调用原有的 save() 的功能，将model中的字段数据保存到数据库中。因为图片处理是基于已经保存的图片的，
+    #     article = super(ArticlePost, self).save(*args, **kwargs)
+
+    #     # 固定宽度缩放图片大小
+    #     if self.avatar and not kwargs.get('update_fields'):
+    #         image = Image.open(self.avatar)
+    #         (x, y) = image.size
+    #         if x > 400:
+    #             new_x = 400
+    #             new_y = int(new_x * (y / x))
+    #             resized_image = image.resize((new_x, new_y), Image.ANTIALIAS)
+    #             resized_image.save(self.avatar.path)
+
+    #     return article
 
     # 内部类 class Meta 用于给 model 定义元数据
     class Meta:
