@@ -133,3 +133,4 @@ dmypy.json
 mysite/smtpconf.py
 media/
 secretkey.txt
+collected_static/
