@@ -8,47 +8,89 @@
 
 **克隆仓库：**
 
-```
+```sh
 $ git clone https://github.com/HEY-BLOOD/mysite.git
 $ cd mysite
 ```
 
 **使用虚拟环境：**
 
-```
+你也可以完全使用你自己的方式来创建环境，比如 conda 或直接使用默认的 Python3
+
+```sh
 $ python -m venv env  # use `virtualenv env` for Python2, use `python3 ...` for Python3 on Linux & macOS
 $ source env/bin/activate  # use `env\Scripts\activate` on Windows
 ```
 
 **安装项目依赖：**
 
-```
+```sh
 $ pip install -r requirements.txt
 ```
 
 **迁移数据库：**
 
-```
+```sh
 $ python manage.py migrate
 ```
 
-**生成虚拟数据：**
+**生成虚拟数据（暂时不可用）：**
 
-```
+```sh
 $ python -m scripts.fake
 ```
 
-除了一些文章和评论外，还创建一个管理员帐户，用户名为admin，密码为admin。
+生成的虚拟数据中除了一些文章和评论外，还创建一个管理员帐户，用户名为admin，密码为admin。
+
+**创建超级管理员账户：**
+
+这将创建一个具有最高权限的用户。注意：在输入密码时任何字符都不会显示，包括星号 `*`。
+
+```sh
+$ python manage.py createsuperuser
+用户名 (leave blank to use 'blood'): new_user
+电子邮件地址: newuser@example.com
+Password: 
+Password (again):
+Superuser created successfully.
+```
+
+## 配置
 
 **邮件服务：**
 
 如果需要配置邮件服务的话，可以将 `.env.example` 文件拷贝一份并保存为 `.env`，并根据你自己的邮件服务进行配置。
 
+```
+# 密钥
+SECRET_KEY=your_secret_key
+
+# SMTP服务器配置，以 QQ邮箱为例
+# django.core.exceptions.ImproperlyConfigured: Set the EMAIL_HOST environment variable
+EMAIL_HOST=smtp.qq.com
+# 改为自己的邮箱名
+EMAIL_HOST_USER=your_email_account@xxx.com
+# 邮箱密码（授权码）
+EMAIL_HOST_PASSWORD=your_password
+# 发送邮件的端口，不通请尝试 465 或 587 端口。
+EMAIL_PORT=25
+# 是否使用 TLS
+EMAIL_USE_TLS=True
+# 默认的发件人
+DEFAULT_FROM_EMAIL=发件人昵称<your_email_account@xxx.com>'
+```
+
+说明：
+
+1. 配置文件中的 `EMAIL_HOST`（SMTP 服务器地址）在这里并没有作用（具体是什么原因还不知道），所以请直接在 `mysite/mysite/settings/common.py` 文件中找到 `EMAIL_HOST` 常量未其赋值即可，如：`EMAIL_HOST = 'smtp.aliyun.com'`。
+2. `.env` 文件中的 `EMAIL_HOST_PASSWORD` （邮箱密码或授权码）需要注意，确定你所使用的 SMTP 服务器使用需要邮箱密码还是授权码。
+3. 其余的配置跟着改成自己的就行了。
+
 ## 运行
 
 内置服务器运行：
 
-```
+```sh
 $ python manage.py runserver 127.0.0.1:8000
 ```
 

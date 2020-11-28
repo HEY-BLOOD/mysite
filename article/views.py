@@ -115,6 +115,7 @@ def article_list(request):
     # 需要传递给模板（templates）的对象
     context = {
         'articles': articles,
+        'articles_length': len(article_list),
         'order': order,
         'search': search,
         'column': column,

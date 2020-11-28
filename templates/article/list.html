@@ -127,11 +127,15 @@
         </div>
         <hr style="width: 100%;" />
         {% empty %}
-        <h5>还没有发布任何文章…………</h5>
+        <div class="row mt-2">
+            <div class="col-3">
+                <h5>还没有发布任何文章…………</h5>
+            </div>
+        </div>
         {% endfor %}
     </div>
 
-    {% if articles|length > 10 %}
+    {% if articles_length > 10 %}
     <!-- 页码导航 -->
     <div class="pagination">
         <div class="m-auto">
@@ -172,7 +176,6 @@
     {% endif %}
 
 </div>
-
 
 
 {% endblock content %}
