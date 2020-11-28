@@ -126,48 +126,53 @@
             </p>
         </div>
         <hr style="width: 100%;" />
+        {% empty %}
+        <h5>还没有发布任何文章…………</h5>
         {% endfor %}
     </div>
 
-</div>
+    {% if articles|length > 10 %}
+    <!-- 页码导航 -->
+    <div class="pagination">
+        <div class="m-auto">
+            <span class="step-links">
+                {# 如果不是第一页，则显示上翻按钮 #}
+                {% if articles.has_previous %}
+                <a href="?page=1&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}"
+                    class="btn btn-success">
+                    &laquo; 1
+                </a>
+                <span>...</span>
+                <a href="?page={{ articles.previous_page_number }}&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}"
+                    class="btn btn-secondary">
+                    {{ articles.previous_page_number }}
+                </a>
+                {% endif %}
 
+                {# 当前页码 #}
+                <span class="current btn btn-danger btn-lg">
+                    {{ articles.number }}
+                </span>
 
-<!-- 页码导航 -->
-<div class="pagination">
-    <div class="m-auto">
-        <span class="step-links">
-            {# 如果不是第一页，则显示上翻按钮 #}
-            {% if articles.has_previous %}
-            <a href="?page=1&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}"
-                class="btn btn-success">
-                &laquo; 1
-            </a>
-            <span>...</span>
-            <a href="?page={{ articles.previous_page_number }}&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}"
-                class="btn btn-secondary">
-                {{ articles.previous_page_number }}
-            </a>
-            {% endif %}
-
-            {# 当前页码 #}
-            <span class="current btn btn-danger btn-lg">
-                {{ articles.number }}
+                {# 如果不是最末页，则显示下翻按钮 #}
+                {% if articles.has_next %}
+                <a href="?page={{ articles.next_page_number }}&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}"
+                    class="btn btn-secondary">
+                    {{ articles.next_page_number }}
+                </a>
+                <span>...</span>
+                <a href="?page={{ articles.paginator.num_pages }}&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}"
+                    class="btn btn-success">
+                    {{ articles.paginator.num_pages }} &raquo;
+                </a>
+                {% endif %}
             </span>
-
-            {# 如果不是最末页，则显示下翻按钮 #}
-            {% if articles.has_next %}
-            <a href="?page={{ articles.next_page_number }}&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}"
-                class="btn btn-secondary">
-                {{ articles.next_page_number }}
-            </a>
-            <span>...</span>
-            <a href="?page={{ articles.paginator.num_pages }}&order={{ order }}&search={{ search }}&column={{ column }}&tag={{ tag }}"
-                class="btn btn-success">
-                {{ articles.paginator.num_pages }} &raquo;
-            </a>
-            {% endif %}
-        </span>
+        </div>
     </div>
+    {% endif %}
+
 </div>
+
+
 
 {% endblock content %}
