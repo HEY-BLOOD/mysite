@@ -6,7 +6,7 @@ app_name = 'article'
 
 urlpatterns = [
     # path函数将url映射到视图
-    path('', views.article_list, name='article_list'),
+    path('', views.article_list, name='index'),
     path('article-list/', views.article_list, name='article_list'),
     # 文章详情，Django2.0的 path新语法用尖括号<>定义需要传递的参数。
     path('article-detail/<int:id>/', views.article_detail, name='article_detail'),
@@ -31,4 +31,8 @@ urlpatterns = [
     #          name='article_detail'),
     # 创建类视图
     # path('article-create/', views.ArticleCreateView.as_view(), name='article_create'),
+    # 文章点赞 +1
+    path('increase-likes/<int:id>/',
+         views.IncreaseLikesView.as_view(),
+         name='increase_likes'),
 ]

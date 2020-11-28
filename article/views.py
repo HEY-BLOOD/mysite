@@ -311,3 +311,12 @@ def article_update(request, id):
         }
         # 将响应返回到模板中
         return render(request, 'article/update.html', context)
+
+
+class IncreaseLikesView(View):
+    """  文章点赞  """
+    def post(self, request, *args, **kwargs):
+        article = ArticlePost.objects.get(id=kwargs.get('id'))
+        article.likes += 1
+        article.save()
+        return HttpResponse('success')

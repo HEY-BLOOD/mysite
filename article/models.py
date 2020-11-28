@@ -67,6 +67,8 @@ class ArticlePost(models.Model):
         format='JPEG',  # 存储格式
         options={'quality': 100},  # 图片质量
     )
+    # 点赞数统计
+    likes = models.PositiveIntegerField('点赞数', default=0)
 
     # 获取文章地址
     def get_absolute_url(self):

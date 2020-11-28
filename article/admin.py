@@ -8,7 +8,9 @@ class ArticlePostAdmin(admin.ModelAdmin):
     # 添加栏目字段的显示
 
     # 表格显示的字段
-    list_display = ['title', 'column', 'tags', 'total_views', 'created', 'updated']
+    list_display = [
+        'title', 'column', 'tags', 'total_views', 'likes', 'created', 'updated'
+    ]
 
     # 表单字段，不要包含不可编辑的字段（如：auto_now=True的 updated字段）
     fields = ['avatar', 'author', 'title', 'column', 'tags', 'body']
