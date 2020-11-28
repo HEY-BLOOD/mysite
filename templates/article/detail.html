@@ -10,6 +10,9 @@
 {# 写入 base.html 中定义的 content #}
 {% block content %}
 
+<script src="{% static 'ckeditor/ckeditor/plugins/prism/lib/prism/prism_patched.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'prism/prism.css' %}">
+
 <!-- 文章详情 -->
 <div class="container">
     <div class="row">
@@ -29,9 +32,9 @@
                     {% endif %}
                 </div>
                 <div>
-                <!-- 显示文章的浏览量 -->
-                浏览：{{ article.total_views }}
-                {# 时间：{{ article.created|date:"Y-m-d H:i:s" }} #}
+                    <!-- 显示文章的浏览量 -->
+                    浏览：{{ article.total_views }}
+                    {# 时间：{{ article.created|date:"Y-m-d H:i:s" }} #}
                 </div>
             </div>
         </div>
@@ -71,7 +74,12 @@
                             我也要发言：
                         </strong>
                     </label>
-                    <textarea type="text" class="form-control" id="body" name="body" rows="2"></textarea>
+                    <!-- <textarea type="text" class="form-control" id="body" name="body" rows="2"></textarea> -->
+                    <!-- 修改评论的正文表单，使用富文本 -->
+                    <div>
+                        {{ comment_form.media }}
+                        {{ comment_form.body }}
+                    </div>
                 </div>
                 <!-- 提交按钮 -->
                 <button type="submit" class="btn btn-primary ">发送</button>
@@ -101,7 +109,8 @@
                 </span> 时说：
             </p>
             <div style="font-family: inherit; font-size: 1em;">
-                {{ comment.body }}</div>
+                {# 富文本是以类似html的格式保存的，因此要加入|safe过滤器，防止浏览器进行转义。 #}
+                {{ comment.body|safe }}</div>
             {% endfor %}
         </div>
 
@@ -139,3 +148,10 @@
 </script>
 
 {% endblock content %}
+
+{% block script %}
+<script>
+    // 消除评论的富文本编辑器，让其自适应宽度
+    $(".django-ckeditor-widget").removeAttr('style');
+</script>
+{% endblock script %}

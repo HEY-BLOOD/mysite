@@ -12,8 +12,9 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from .models import ArticlePost, ArticleColumn
-from .forms import ArticlePostForm
 from comment.models import Comment
+from .forms import ArticlePostForm
+from comment.forms import CommentForm
 import markdown
 
 
@@ -166,8 +167,15 @@ def article_detail(request, id):
     ])
     # 将正文渲染为 html文本
     article.body = md.convert(article.body)
+    # 引入评论表单
+    comment_form = CommentForm()
     # 模板上下文；文章、正文目录、文章评论
-    context = {'article': article, 'toc': md.toc, 'comments': comments}
+    context = {
+        'article': article,
+        'toc': md.toc,
+        'comments': comments,
+        'comment_form': comment_form,
+    }
     # 载入模板，并返回context对象
     return render(request, 'article/detail.html', context)
 

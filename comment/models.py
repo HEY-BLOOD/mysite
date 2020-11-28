@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 
 from article.models import ArticlePost
 
+# django-ckeditor 富文本编辑器
+from ckeditor.fields import RichTextField
+
 
 # Create your models here.
 class Comment(models.Model):
@@ -19,12 +22,13 @@ class Comment(models.Model):
                              on_delete=models.CASCADE,
                              related_name='comments',
                              verbose_name='用户')
-    # 评论内容
-    body = models.TextField('评论内容')
+    # 评论内容，改为使用富文本编辑器
+    # body = models.TextField('评论内容')
+    body = RichTextField('评论内容')
     created = models.DateTimeField('评论时间', auto_now_add=True)
 
     class Meta:
-        ordering = ('created', )
+        ordering = ('-created', )  # 降序排列
         db_table = "tb_comment"
         verbose_name = '评论'  # 管理后台中显示的模型名
         verbose_name_plural = verbose_name  # 管理后台中显示的模型名复数形式

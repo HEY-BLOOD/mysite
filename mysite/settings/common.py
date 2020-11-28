@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'comment.apps.CommentConfig',  # 评论应用
     'taggit',  # django-taggit 标签扩展
     'imagekit',  # django-imagekit 对模型的图片字段进行处理
+    'ckeditor',  # django-ckeditor 富文本编辑器
 ]
 
 MIDDLEWARE = [
@@ -102,11 +103,47 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# django-ckeditor 富文本编辑器配置
+CKEDITOR_CONFIGS = {
+    # django-ckeditor默认使用default配置
+    'default': {
+        # 编辑器宽度自适应
+        'width':
+        'auto',
+        'height':
+        '250px',
+        # tab键转换空格数
+        'tabSpaces':
+        4,
+        # 工具栏风格
+        'toolbar':
+        'Custom',
+        # 工具栏按钮，在 toolbar_Custom中定义需要使用的功能模块
+        'toolbar_Custom': [
+            # 表情 代码块
+            ['Smiley', 'CodeSnippet'],
+            # 字体风格
+            ['Bold', 'Italic', 'Underline', 'RemoveFormat', 'Blockquote'],
+            # 字体颜色
+            ['TextColor', 'BGColor'],
+            # 链接
+            ['Link', 'Unlink'],
+            # 列表
+            ['NumberedList', 'BulletedList'],
+            # 最大化
+            ['Maximize']
+        ],
+        # 加入代码块插件，代码块功能是编辑器自带的插件，需要在extraPlugins中指定使用。添加 Prism 相关插件
+        'extraPlugins':
+        ','.join(['codesnippet', 'prism', 'widget', 'lineutils']),
+    }
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
 # 默认语言 en-us
-LANGUAGE_CODE = 'zh-Hans'
+LANGUAGE_CODE = 'zh-hans'
 
 # 设置上海的时区，之前的是 'UTC'
 TIME_ZONE = 'Asia/Shanghai'
@@ -119,10 +156,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-
 STATIC_URL = '/static/'
 
-# 指定静态文件的存放位置
+# 指定静态文件的存放路径
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
