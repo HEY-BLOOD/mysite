@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'taggit',  # django-taggit 标签扩展
     'imagekit',  # django-imagekit 对模型的图片字段进行处理
     'ckeditor',  # django-ckeditor 富文本编辑器
+    'mptt',  # django-mptt 多级评论扩展
 ]
 
 MIDDLEWARE = [
