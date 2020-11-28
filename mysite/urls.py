@@ -36,6 +36,8 @@ urlpatterns = [
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
     # notice 消息通知的未读与已读
     path('notice/', include('notice.urls', namespace='notice')),
+    # django-allauth 用户登录
+    path('accounts/', include('allauth.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

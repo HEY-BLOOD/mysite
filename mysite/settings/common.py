@@ -30,10 +30,8 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
     'article.apps.ArticleConfig',  # 注册 article 应用
     'userprofile.apps.UserprofileConfig',  # 用户管理应用
@@ -45,7 +43,24 @@ INSTALLED_APPS = [
     'mptt',  # django-mptt 多级评论扩展
     'notifications',  # django-notifications-hq 消息通知扩展（小红点）
     'notice',  # 消息通知的未读与已读
+    # allauth 启动必须项
+    'django.contrib.auth',
+    'django.contrib.messages',
+    'django.contrib.sites',
+    # allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # 可添加需要的第三方登录
+    'allauth.socialaccount.providers.github',
+    # 'allauth.socialaccount.providers.weibo',
 ]
+
+# 设置站点
+SITE_ID = 1
+
+# 登录成功后重定向地址
+LOGIN_REDIRECT_URL = '/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -70,9 +85,18 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # allauth 启动必须项
+                'django.template.context_processors.request',
             ],
         },
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    # Django 后台可独立于 allauth 登录
+    'django.contrib.auth.backends.ModelBackend',
+    # 配置 allauth 独有的认证方法，如 email 登录
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
