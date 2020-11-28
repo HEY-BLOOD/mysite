@@ -15,14 +15,24 @@
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"> -->
     <!-- 引入 monikai.css，用于代码块的语法高亮 -->
     <link rel="stylesheet" href="{% static 'md_css/monokai.css' %}">
+    <!-- Font Awesome 矢量图标库 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.14.0/css/all.min.css">
 </head>
 
 <body>
     <!-- 引入导航栏 -->
     {% include 'header.html' %}
 
-    {# 预留具体页面内容的位置 #}
-    {% block content %}{% endblock content %}
+
+    {% comment %}
+    #push容器留出一段与页脚等高的空隙，避免正文内容与页脚重叠。
+    #wrapper容器的底部有一个负边距，作用是给页脚容器让出位置。这个负边距你不设置也可以，无非就是底部多出高度为60px的空白罢了。
+    {% endcomment %}
+    <div id="wrapper">
+        {# 预留具体页面内容的位置 #}
+        {% block content %}{% endblock content %}
+        <div id="push"></div>
+    </div>
 
     <!-- 引入注脚 -->
     {% include 'footer.html' %}
@@ -60,6 +70,9 @@
     <script src="{% static 'jquery-3.3.1/jquery-3.3.1.min.js' %}"></script>
     <!-- <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
 
+    <!-- 回到顶部浮动按钮 -->
+    {% include 'back2top_func.html' %}
+
     {# 拼接JavaScript脚本的位置，用于放置其它页面中依赖与 Jquery的代码 #}
     {% block script %}{% endblock script %}
 
@@ -78,6 +91,24 @@
     <!-- web弹窗组件 layer依赖与 jquery，因此要在 jquery后面引入layer -->
     <script src="{% static 'layer/layer.js' %}"></script>
     <!-- <script src="https://cdn.bootcdn.net/ajax/libs/layer/3.1.1/layer.js"></script> -->
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        #wrapper {
+            min-height: 100%;
+            margin-bottom: -60px;
+        }
+
+        #footer,
+        #push {
+            height: 60px;
+        }
+    </style>
 </body>
 
 </html>

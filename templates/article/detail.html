@@ -39,15 +39,31 @@
             </div>
         </div>
 
-        <!-- 正文目录 -->
-        <div class="col-3 mt-4">
-            <h4><strong>目录</strong></h4>
-            <hr>
-            <div>
-                {# django过滤器，不对变量的内容进行转义 #}
-                {{ toc|safe }}
+        <!-- 正文目录，使用粘性侧边栏 -->
+        <div class="col-3  mt-4">
+            <div id="sidebar" class="sidebar">
+                <div class="sidebar__inner">
+                    <h4><strong>目录</strong></h4>
+                    <hr>
+                    <div>
+                        {# django过滤器，不对变量的内容进行转义 #}
+                        {{ toc|safe }}
+                    </div>
+                </div>
             </div>
         </div>
+        <!-- 粘性侧边栏样式 -->
+        <style>
+            .sidebar {
+                will-change: min-height;
+            }
+
+            .sidebar__inner {
+                transform: translate(0, 0);
+                transform: translate3d(0, 0, 0);
+                will-change: position, transform;
+            }
+        </style>
 
         {# 新增一个隐藏的表单，用于安全删除文章 #}
         <form style="display:none;" id="safe_delete" action="{% url 'article:article_safe_delete' article.id %}"
@@ -63,7 +79,7 @@
         </div>
 
         <!-- 发表评论 -->
-        <div class="col-12">
+        <div class="col-9">
             <hr>
             {% if user.is_authenticated %}
             <form action="{% url 'comment:post_comment' article.id %}" method="POST">
@@ -150,7 +166,14 @@
 {% endblock content %}
 
 {% block script %}
-<script>
+<!-- 引入粘性侧边栏 -->
+<script src="{% static 'sticky_sidebar/jquery.sticky-sidebar.min.js' %}"></script>
+<script type="text/javascript">
+    $('#sidebar').stickySidebar({
+        topSpacing: 20,
+        bottomSpacing: 20,
+    });
+
     // 消除评论的富文本编辑器，让其自适应宽度
     $(".django-ckeditor-widget").removeAttr('style');
 </script>
