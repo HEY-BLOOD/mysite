@@ -2,6 +2,10 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{# 加载自定义的模板过滤器和模板标签 #}
+{% load my_filters %}
+{% load my_tags %}
+
 {# 写入 base.html 中定义的 title #}
 {% block title %}
 首页
@@ -115,7 +119,9 @@
                 </span>
                 <span>
                     <i class="fas fa-clock" style="color: pink;"></i>
-                    {{ article.created|date:'Y-m-d' }}
+                    {# {{ article.created|date:'Y-m-d' }} #}
+                    {# 使用相对时间，如5个月前 #}
+                    {{ article.created|timesince_zh }}
                 </span>
             </p>
         </div>

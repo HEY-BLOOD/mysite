@@ -1,0 +1,12 @@
+{% commetn %}
+调用方法
+{% load my_tags %}
+...
+{% comments_created article %}
+{% endcomment %}
+
+<ul>
+    {% for comment in comments %}
+    <li> {{ comment.created }} </li>
+    {% endfor %}
+</ul>
