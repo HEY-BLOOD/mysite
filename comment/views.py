@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.http.response import HttpResponse
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
@@ -64,9 +65,9 @@ def post_comment(request, article_id, parent_comment_id=None):
                         target=article,
                         action_object=new_comment,
                     )
-                return HttpResponse('200 OK')
+                # return HttpResponse('200 OK')
+                return JsonResponse({"code": "200 OK", "new_comment_id": new_comment.id})
 
-            new_comment.save()
             # 给管理员发送通知
             if not request.user.is_superuser:
                 notify.send(
@@ -76,7 +77,11 @@ def post_comment(request, article_id, parent_comment_id=None):
                     target=article,
                     action_object=new_comment,
                 )
-            return redirect(article)
+            # 新增代码，添加锚点
+            redirect_url = article.get_absolute_url() + '#comment_elem_' + str(
+                new_comment.id)
+            # 修改redirect参数
+            return redirect(redirect_url)
         else:
             return HttpResponse("表单内容有误，请重新填写。")
     # 处理 GET 请求

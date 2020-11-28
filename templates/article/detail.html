@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- 文章正文 -->
         <div class="col-9">
             {# 不进行转义 #}
@@ -130,10 +130,10 @@
                         offset-1 col-11
                         {% else %}
                         col-12
-                        {% endif %}">
+                        {% endif %}" id="comment_elem_{{ comment.id }}">
                     <hr>
                     <p>
-                        <strong style="color: pink">
+                        <strong style=" color: pink">
                             {{ comment.user }}
                         </strong>
 
@@ -146,7 +146,6 @@
 
                     </p>
                     <div>{{ comment.body|safe }}</div>
-
                     <div>
                         <span style="color: gray">
                             {{ comment.created|date:"Y-m-d H:i" }}
@@ -185,8 +184,6 @@
                     </div>
                     {% endif %}
                 </div>
-
-
                 {% endwith %}
                 {% endrecursetree %}
             </div>
@@ -231,6 +228,15 @@
 
         $(modal_id).modal('show');
     }
+
+    // 处理二级回复
+    function post_reply_and_show_it(new_comment_id) {
+        let next_url = "{% url 'article:article_detail' article.id %}";
+        // 去除 url 尾部 '/' 符号
+        next_url = next_url.charAt(next_url.length - 1) == '/' ? next_url.slice(0, -1) : next_url;
+        // 刷新重定向页面定位到锚点
+        window.location.replace(next_url + "#comment_elem_" + new_comment_id);
+    };
 
     // 删除文章的函数
     function confirm_delete() {
