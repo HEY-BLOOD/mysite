@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'imagekit',  # django-imagekit 对模型的图片字段进行处理
     'ckeditor',  # django-ckeditor 富文本编辑器
     'mptt',  # django-mptt 多级评论扩展
+    'notifications',  # django-notifications-hq 消息通知扩展（小红点）
+    'notice',  # 消息通知的未读与已读
 ]
 
 MIDDLEWARE = [

@@ -18,6 +18,9 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+# django-notifications-hq 消息通知扩展的路由
+import notifications.urls
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     # 配置 article 应用的分发路由，只能二选一，否则生成数据库迁移文件时会提示 “URL namespace 'article' isn't unique.”
@@ -29,6 +32,10 @@ urlpatterns = [
     path('password-reset/', include('password_reset.urls')),
     # 评论
     path('comment/', include('comment.urls', namespace='comment')),
+    # django-notifications-hq 消息通知扩展的路由
+    path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
+    # notice 消息通知的未读与已读
+    path('notice/', include('notice.urls', namespace='notice')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
