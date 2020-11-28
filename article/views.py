@@ -10,6 +10,7 @@ from django.db.models import Q
 from django.views import View
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.shortcuts import get_object_or_404
 
 from .models import ArticlePost, ArticleColumn
 from comment.models import Comment
@@ -147,7 +148,8 @@ class ArticleDetailView(DetailView):
 def article_detail(request, id):
     """ 文章详情 """
     # 取出相应的文章
-    article = ArticlePost.objects.get(id=id)
+    # article = ArticlePost.objects.get(id=id)
+    article = get_object_or_404(ArticlePost, id=id)
 
     # 取出文章评论
     comments = Comment.objects.filter(article=id)
