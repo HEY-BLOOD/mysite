@@ -21,6 +21,9 @@ from django.conf.urls.static import static
 # django-notifications-hq 消息通知扩展的路由
 import notifications.urls
 
+admin.site.site_title = '管理后台'
+admin.site.site_header = '系统管理后台'
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     # 配置 article 应用的分发路由，只能二选一，否则生成数据库迁移文件时会提示 “URL namespace 'article' isn't unique.”
@@ -38,6 +41,4 @@ urlpatterns = [
     path('notice/', include('notice.urls', namespace='notice')),
     # django-allauth 用户登录
     path('accounts/', include('allauth.urls')),
-]
-
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

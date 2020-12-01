@@ -1,4 +1,4 @@
-# mysite
+![mysite](https://socialify.git.ci/HEY-BLOOD/mysite/image?description=1&pattern=Plus&theme=Light)
 
 使用Django框架开发的博客系统，从 [杜赛的博客](https://www.dusaiphoto.com/) 学来的。
 
@@ -6,14 +6,14 @@
 
 ## 安装
 
-**克隆仓库：**
+**1. 克隆仓库：**
 
 ```sh
 $ git clone https://github.com/HEY-BLOOD/mysite.git
 $ cd mysite
 ```
 
-**使用虚拟环境：**
+**2. 使用虚拟环境：**
 
 你也可以完全使用你自己的方式来创建环境，比如 conda 或直接使用默认的 Python3
 
@@ -22,38 +22,25 @@ $ python -m venv env  # use `virtualenv env` for Python2, use `python3 ...` for 
 $ source env/bin/activate  # use `env\Scripts\activate` on Windows
 ```
 
-**安装项目依赖：**
+**3. 安装项目依赖：**
 
 ```sh
 $ pip install -r requirements.txt
 ```
 
-**迁移数据库：**
+**4. 迁移数据库：**
 
 ```sh
 $ python manage.py migrate
 ```
 
-**生成虚拟数据（暂时不可用）：**
+**5. 生成虚拟数据：**
 
 ```sh
 $ python -m scripts.fake
 ```
 
-生成的虚拟数据中除了一些文章和评论外，还创建一个管理员帐户，用户名为admin，密码为admin。
-
-**创建超级管理员账户：**
-
-这将创建一个具有最高权限的用户。注意：在输入密码时任何字符都不会显示，包括星号 `*`。
-
-```sh
-$ python manage.py createsuperuser
-用户名 (leave blank to use 'blood'): new_user
-电子邮件地址: newuser@example.com
-Password: 
-Password (again):
-Superuser created successfully.
-```
+生成的虚拟数据中除了一些文章和评论外，还创建一个管理员帐户，用户名和密码均为 `admin`，可以直接使用它来登录后台。
 
 ## 配置
 

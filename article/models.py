@@ -59,13 +59,15 @@ class ArticlePost(models.Model):
                                related_name='article',
                                verbose_name='栏目')
     # 文章标签，多对多关系
-    tags = TaggableManager('标签', help_text="如：文学,诗歌,青春", blank=True)
+    tags = TaggableManager(verbose_name='标签', help_text="如：文学,诗歌,青春", blank=True)
     # 文章标题图，使用 django-imagekit，不用自己在save方法中处理图片了
     avatar = ProcessedImageField(
         upload_to='article/%Y%m%d',  # 上传路径（如：media/article/20190226/）
         processors=[ResizeToFit(width=400)],  # 处理规则
         format='JPEG',  # 存储格式
         options={'quality': 100},  # 图片质量
+        null=True,
+        blank=True,
     )
     # 点赞数统计
     likes = models.PositiveIntegerField('点赞数', default=0)
