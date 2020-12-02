@@ -69,11 +69,11 @@
             <!-- 栏目 -->
             {% if article.column %}
             <a href="{% url 'article:article_list' %}?column={{ article.column.id }}" class="btn btn-sm mb-2
-                        {% if article.column.title == 'Django' %}
+                        {% if article.column.get_remainder == 0 %}
                             btn-success
-                        {% elif article.column.title == 'Java' %}
+                        {% elif article.column.get_remainder == 1 %}
                             btn-danger
-                        {% elif article.column.title == 'HTML' %}
+                        {% elif article.column.get_remainder == 2 %}
                             btn-warning
                         {% else %}
                             btn-info
@@ -102,7 +102,8 @@
             <!-- 摘要 -->
             <div>
                 <p style="color: gray;">
-                    {{ article.body|slice:'100' }}...
+                    <!-- {{ article.body|slice:'100' }}... -->
+                    {{ article.excerpt }}...
                 </p>
             </div>
             <!-- 注脚 -->

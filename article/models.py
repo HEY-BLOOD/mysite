@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 # timezone 用于处理时间相关事务。
 from django.utils import timezone
+# 去除HTML标签
+from django.utils.html import strip_tags
 # Django-taggit 标签功能模块
 from taggit.managers import TaggableManager
 # 图像处理
@@ -12,6 +14,8 @@ from PIL import Image
 # 引入imagekit，处理图片
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFit
+
+import markdown
 
 
 # Create your models here.
@@ -32,6 +36,10 @@ class ArticleColumn(models.Model):
         db_table = "tb_column"
         verbose_name = '栏目'  # 管理后台中显示的模型名
         verbose_name_plural = verbose_name  # 管理后台中显示的模型名复数形式
+
+    def get_remainder(self):
+        print("int(self.id) % 4 =", int(self.id) % 4)
+        return int(self.id) % 4
 
     def __str__(self):
         return self.title
@@ -71,6 +79,8 @@ class ArticlePost(models.Model):
     )
     # 点赞数统计
     likes = models.PositiveIntegerField('点赞数', default=0)
+    # 文章摘要 正文的前100个字
+    excerpt = models.CharField('摘要', max_length=100, blank=True)
 
     # 获取文章地址
     def get_absolute_url(self):
@@ -102,6 +112,21 @@ class ArticlePost(models.Model):
         db_table = "tb_article"
         verbose_name = '文章'  # 管理后台中显示的模型名
         verbose_name_plural = verbose_name  # 管理后台中显示的模型名复数形式
+
+    def save(self, *args, **kwargs):
+        # 首先实例化一个 Markdown 类，用于渲染 body 的文本。
+        # 由于摘要并不需要生成文章目录，所以去掉了目录拓展。
+        md = markdown.Markdown(extensions=[
+            'markdown.extensions.extra',
+            'markdown.extensions.codehilite',
+        ])
+
+        # 先将 Markdown 文本渲染成 HTML 文本
+        # strip_tags 去掉 HTML 文本的全部 HTML 标签
+        # 从文本摘取前 100 个字符赋给 excerpt
+        self.excerpt = strip_tags(md.convert(self.body))[:100]
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         # 将文章标题返回
