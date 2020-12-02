@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     # 可添加需要的第三方登录
     'allauth.socialaccount.providers.github',
     # 'allauth.socialaccount.providers.weibo',
+    # django-mdeditor 编辑器
+    'mdeditor',
 ]
 
 # 设置站点
@@ -117,8 +119,7 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME':
-        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
@@ -203,8 +204,7 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, 'logs/debug.log'),
             'formatter': 'verbose',
             # 'class': 'logging.FileHandler',  # 原来的
-            'class':
-            'logging.handlers.TimedRotatingFileHandler',  # Python内置的随时间分割日志文件的模块
+            'class': 'logging.handlers.TimedRotatingFileHandler',  # Python内置的随时间分割日志文件的模块
             'when': 'midnight',  # 分割时间为凌晨
             'backupCount': 30,  # 日志文件保存日期为30天
         },
@@ -267,7 +267,6 @@ EMAIL_PORT = env('EMAIL_PORT')
 EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 # 默认的发件人
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
-
 
 # simpleui 设置
 
@@ -351,3 +350,34 @@ SIMPLEUI_CONFIG = {
 # 指定simpleui 是否以脱机模式加载静态资源，为True的时候将默认从本地读取所有资源，即使没有联网一样可以。适合内网项目
 # 不填该项或者为False的时候，默认从第三方的cdn获取
 # SIMPLEUI_STATIC_OFFLINE = True
+
+# mdeditor编辑器配置
+MDEDITOR_CONFIGS = {
+    'default': {
+        'width': '100% ',  # Custom edit box width
+        'heigth': 500,  # Custom edit box height
+        'toolbar': ["undo", "redo", "|",
+                    "bold", "del", "italic", "quote", "|",   # "ucwords", "uppercase", "lowercase",
+                    "h1", "h2", "h3", "h5", "h6", "|",
+                    "list-ul", "list-ol", "hr", "|",
+                    "link", "reference-link", "image", "code", "preformatted-text", "code-block", "table", "datetime",
+                    "emoji", "html-entities", "pagebreak", "goto-line", "|",
+                    "help", "info", "|",
+                    "preview", "watch", "fullscreen"],  # custom edit box toolbar 
+        'upload_image_formats': ["jpg", "jpeg", "gif", "png", "bmp", "webp"],  # image upload format type
+        'image_folder': 'editor',  # image save the folder name
+        'theme': 'default',  # edit box theme, dark / default
+        'preview_theme': 'default',  # Preview area theme, dark / default
+        'editor_theme': 'default',  # edit area theme, pastel-on-dark / default
+        'toolbar_autofixed': True,  # Whether the toolbar capitals
+        'search_replace': True,  # Whether to open the search for replacement
+        'emoji': True,  # whether to open the expression function
+        'tex': True,  # whether to open the tex chart function
+        'flow_chart': True,  # whether to open the flow chart function
+        'sequence': True,  # Whether to open the sequence diagram function
+        'watch': True,  # Live preview
+        'lineWrapping': False,  # lineWrapping
+        'lineNumbers': True,  # lineNumbers
+        'language': 'zh'  # zh / en / es 
+    }    
+}

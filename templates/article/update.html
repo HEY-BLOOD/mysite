@@ -19,7 +19,7 @@
                 <div class="form-group">
                     <label for="title">文章标题</label>
                     {# 在 value 属性中指定文本框的初始值为旧的内容，即 article 对象中的 title 字段 #}
-                    <input type="text" class="form-control" id="title" name="title" value="{{ article.title }}">
+                    <input type="text" class="form-control" id="title" name="title" value="{{ article.title }}" required>
                 </div>
                 <!-- 文章栏目 -->
                 <div class="form-group">
@@ -41,9 +41,16 @@
                 <!-- 文章正文 -->
                 <div class="form-group">
                     <label for="body">文章正文</label>
-                    {# 文本域不需要 value 属性，直接在标签体中嵌入数据即可 #}
-                    <textarea type="text" class="form-control" id="body" name="body"
-                        rows="12">{{ article.body }}</textarea>
+                    {# 改用 mdeditor编写正文 #}
+                    <!-- 引入mdeditor编辑器的静态资源 -->
+                    {{ article_post_form.media }}
+                    <div class="wmd-wrapper"  id="id_body-wmd-wrapper">
+                        <textarea  cols="40" id="id_body" name="body" rows="10" required>{{ article.body }}</textarea>
+                    </div>
+                    {% comment %}
+                    <!-- 文本域不需要 value 属性，直接在标签体中嵌入数据即可  -->
+                    <textarea type="text" class="form-control" id="body" name="body" rows="12">{{ article.body }}</textarea>
+                    {% endcomment %}
                 </div>
                 <button type="submit" class="btn btn-primary">完成</button>
             </form>
@@ -51,3 +58,64 @@
     </div>
 </div>
 {% endblock content %}
+
+{% block script %}
+<script type="text/javascript">
+/* article:update 文章修改的mdeditor正文控件 */
+$(function () {
+        editormd("id_body-wmd-wrapper", {
+            watch: true, // 关闭实时预览
+            lineNumbers: true,
+            lineWrapping: false,
+            width: "100% ",
+            height: 500,
+            placeholder: '',
+            // 当有多个mdeditor时，全屏后，其他mdeditor仍然显示，解决此问题。
+            onfullscreen : function() {
+                this.editor.css("border-radius", 0).css("z-index", 9999);
+            },
+            onfullscreenExit : function() {
+                this.editor.css({
+                    zIndex : 10,
+                    border : "1px solid rgb(221,221,221)"
+                })
+            },
+            syncScrolling: "single",
+            path: "/static/mdeditor/js/lib/",
+            // theme
+            theme : "default",
+            previewTheme : "default",
+            editorTheme : "default",
+
+            saveHTMLToTextarea: true, // editor.md 有问题没有测试成功
+            toolbarAutoFixed: true,
+            searchReplace: true,
+            emoji: true,
+            tex: true,
+            taskList: false,
+            flowChart: true,
+            sequenceDiagram: true,
+
+            // image upload
+            imageUpload: true,
+            imageFormats: ['jpg', 'jpeg', 'gif', 'png', 'bmp', 'webp'],
+            imageUploadURL: "/mdeditor/uploads/",
+            toolbarIcons: function () {
+                return ['undo', 'redo', '|', 'bold', 'del', 'italic', 'quote', '|', 'h1', 'h2', 'h3', 'h5', 'h6', '|', 'list-ul', 'list-ol', 'hr', '|', 'link', 'reference-link', 'image', 'code', 'preformatted-text', 'code-block', 'table', 'datetime', 'emoji', 'html-entities', 'pagebreak', 'goto-line', '|', 'help', 'info', '|', 'preview', 'watch', 'fullscreen']
+            },
+            onload: function () {
+                console.log('onload', this);
+                //this.fullscreen();
+                //this.unwatch();
+                //this.watch().fullscreen();
+
+                //this.setMarkdown("#PHP");
+                //this.width("100%");
+                //this.height(480);
+                //this.resize("100%", 640);
+            }
+        });
+
+    });
+</script>
+{% endblock script %}

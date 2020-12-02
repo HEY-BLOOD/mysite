@@ -14,7 +14,8 @@ from PIL import Image
 # 引入imagekit，处理图片
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFit
-
+# django-mdeditor Markdown编辑器
+from mdeditor.fields import MDTextField
 import markdown
 
 
@@ -52,7 +53,7 @@ class ArticlePost(models.Model):
     # 文章标题。models.CharField 为字符串字段，用于保存较短的字符串，比如标题
     title = models.CharField('标题', max_length=100)
     # 文章正文。保存大量文本使用 TextField
-    body = models.TextField('正文')
+    body = MDTextField(verbose_name='正文')
     # 文章创建时间。参数 default=timezone.now 指定其在创建数据时将默认写入当前的时间
     created = models.DateTimeField('创建时间', default=timezone.now)
     # 文章更新时间。参数 auto_now=True 指定每次数据更新时自动写入当前时间（不可编辑字段）

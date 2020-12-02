@@ -6,5 +6,5 @@ class ArticlePostForm(forms.ModelForm):
     class Meta:
         # 指明数据模型来源
         model = ArticlePost
-        # 定义表单包含的字段
-        fields = ('title', 'body', 'tags', 'avatar')
+        # 定义表单包含的字段，不要把 column加进来，否则数据不能通过验证
+        fields = ('avatar', 'title', 'tags', 'body')
