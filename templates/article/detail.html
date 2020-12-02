@@ -16,7 +16,7 @@
 <!-- 文章详情 -->
 <div class="container">
     <div class="row">
-        
+
         <div class="col-9">
             <!-- 标题及作者 -->
             <h1 class="mt-4 mb-4">{{ article.title }}</h1>
@@ -29,6 +29,12 @@
                     {# 防范CSRF攻击，即删除文章时用POST方法，并且校验csrf令牌 #}
                     · <a href="{% url "article:article_update" article.id %}">编辑</a>
                     · <a href="#" onclick="confirm_delete()">删除</a>
+                    {# 新增一个隐藏的表单，用于安全删除文章 #}
+                    <form style="display:none;" id="safe_delete"
+                        action="{% url 'article:article_safe_delete' article.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit">发送</button>
+                    </form>
                     {% endif %}
                 </div>
                 <div>
@@ -61,12 +67,24 @@
                 </button>
             </div>
 
-            {# 新增一个隐藏的表单，用于安全删除文章 #}
-            <form style="display:none;" id="safe_delete" action="{% url 'article:article_safe_delete' article.id %}"
-                method="POST">
-                {% csrf_token %}
-                <button type="submit">发送</button>
-            </form>
+            <!-- 相邻文章导航 -->
+            <br>
+            <div class="row justify-content-end">
+                {% if next_article %}
+                <div class="col-auto mr-auto">
+                    <a href="{{ next_article.get_absolute_url }}" class="btn btn-info">
+                        &laquo;&nbsp;{{ next_article.title }}
+                    </a>
+                </div>
+                {% endif %}
+                {% if pre_article %}
+                <div class="col-auto">
+                    <a href="{{ pre_article.get_absolute_url }}" class="btn btn-info">
+                        {{ pre_article.title }}&raquo;&nbsp;
+                    </a>
+                </div>
+                {% endif %}
+            </div>
 
             <!-- 发表评论 -->
             <div>
@@ -134,8 +152,6 @@
                             <span style="color: gray">
                                 {{ comment.created|date:"Y-m-d H:i" }}
                             </span>
-
-                            {% comment %}
                             <!-- 加载 modal 的按钮 -->
                             {% if user.is_authenticated %}
                             <button type="button" class="btn btn-light btn-sm text-muted"
@@ -147,7 +163,6 @@
                                 回复
                             </a>
                             {% endif %}
-                            {% endcomment %}
                         </div>
 
                         <!-- Modal -->

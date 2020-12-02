@@ -59,12 +59,10 @@ class ArticleListView(ContextMixin, ListView):
         if search:
             if order == 'total_views':
                 # 用 Q对象对所有文章的标题和内容进行联合搜索；icontains不区分大小写，对应的contains区分大小写
-                article_list = ArticlePost.objects.filter(
-                    Q(title__contains=search)
-                    | Q(body__contains=search)).order_by('-total_views')
+                article_list = ArticlePost.objects.filter(Q(title__contains=search)
+                                                          | Q(body__contains=search)).order_by('-total_views')
             else:
-                article_list = ArticlePost.objects.filter(
-                    Q(title__contains=search) | Q(body__contains=search))
+                article_list = ArticlePost.objects.filter(Q(title__contains=search) | Q(body__contains=search))
         else:
             # 将 search 参数重置为空，因为 search参数为空的时值为 None，传递到模板中会错误地转换成"None"字符串
             search = ''
@@ -89,8 +87,7 @@ def article_list(request):
 
     # 搜索查询集
     if search:
-        article_list = article_list.filter(
-            Q(title__icontains=search) | Q(body__icontains=search))
+        article_list = article_list.filter(Q(title__icontains=search) | Q(body__icontains=search))
     else:
         search = ''
 
@@ -150,14 +147,54 @@ def article_detail(request, id):
     """ 文章详情 """
     # 取出相应的文章
     # article = ArticlePost.objects.get(id=id)
+    # logger.warning('Something went wrong!')
     article = get_object_or_404(ArticlePost, id=id)
 
     # 取出文章评论
     comments = Comment.objects.filter(article=id)
 
-    # 将浏览量 +1并更新
+    # 浏览量 +1
     article.total_views += 1
     article.save(update_fields=['total_views'])
+
+    # 相邻发表文章的快捷导航
+    pre_article = ArticlePost.objects.filter(id__lt=article.id).order_by('-id')
+    next_article = ArticlePost.objects.filter(id__gt=article.id).order_by('id')
+    if pre_article.count() > 0:
+        pre_article = pre_article[0]
+    else:
+        pre_article = None
+
+    if next_article.count() > 0:
+        next_article = next_article[0]
+    else:
+        next_article = None
+
+    # Markdown 语法渲染
+    md = markdown.Markdown(extensions=[
+        # 包含 缩写、表格等常用扩展
+        'markdown.extensions.extra',
+        # 语法高亮扩展
+        'markdown.extensions.codehilite',
+        # 目录扩展
+        'markdown.extensions.toc',
+    ])
+    article.body = md.convert(article.body)
+
+    # 为评论引入表单
+    comment_form = CommentForm()
+
+    # 需要传递给模板的对象
+    context = {
+        'article': article,
+        'toc': md.toc,
+        'comments': comments,
+        'pre_article': pre_article,
+        'next_article': next_article,
+        'comment_form': comment_form,
+    }
+    # 载入模板，并返回context对象
+    return render(request, 'article/detail.html', context)
 
     # 创建含有扩展的 Markdown实例；之前是 markdown，现在改为 Markdown
     md = markdown.Markdown(extensions=[
