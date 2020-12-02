@@ -11,7 +11,8 @@ from django.views import View
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.shortcuts import get_object_or_404
-
+# 消息闪现模块
+from django.contrib import messages
 from .models import ArticlePost, ArticleColumn
 from comment.models import Comment
 from .forms import ArticlePostForm
@@ -253,8 +254,9 @@ def article_create(request):
             new_article.save()
             # 新增代码，保存文章标签 tags 的多对多关系
             article_post_form.save_m2m()
-            # 完成后返回到文章列表，反向解析 URL地址
-            return redirect("article:article_list")
+            messages.warning(request, "文章发表成功！")
+            # 完成后返回到新发布的文章页面，反向解析 URL地址
+            return redirect(new_article.get_absolute_url())
         # 如果数据不合法，返回错误信息
         else:
             return HttpResponse("表单内容有误，请重新填写。")
@@ -329,7 +331,9 @@ def article_update(request, id):
             # 标签
             article.tags.set(*request.POST.get('tags').split(','), clear=True)
             article.save()
+            
             # 完成后返回到修改后的文章中。需传入文章的 id 值
+            messages.warning(request, "文章修改成功！")
             return redirect("article:article_detail", id=id)
         # 如果数据不合法，返回错误信息
         else:

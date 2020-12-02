@@ -38,7 +38,7 @@ class ArticleColumn(models.Model):
         verbose_name_plural = verbose_name  # 管理后台中显示的模型名复数形式
 
     def get_remainder(self):
-        print("int(self.id) % 4 =", int(self.id) % 4)
+        """ 获取id对4的余数，用于首页判断栏目显示的样式 """
         return int(self.id) % 4
 
     def __str__(self):

@@ -3,9 +3,9 @@
 {% load staticfiles %}
 
 {# 写入 base.html 中定义的 title #}
-{% block title %}
+{% block header_title %}
 {{ article.title }}
-{% endblock title %}
+{% endblock header_title %}
 
 {# 写入 base.html 中定义的 content #}
 {% block content %}
@@ -99,7 +99,7 @@
                             </strong>
                         </label>
                         <!-- <textarea type="text" class="form-control" id="body" name="body" rows="2"></textarea> -->
-                        <!-- 修改评论的正文表单，使用富文本 -->
+                        {# 修改评论的正文表单，使用富文本 #}
                         <div>
                             {{ comment_form.media }}
                             {{ comment_form.body }}
@@ -361,5 +361,12 @@
             return false;
         };
     };
+
+    // 消息闪现弹窗
+    {% if messages %}
+    {% for msg in messages %}
+    layer.msg('{{ msg }}');
+    {% endfor %}
+    {% endif %}
 </script>
 {% endblock script %}
