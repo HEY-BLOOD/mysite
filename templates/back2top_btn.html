@@ -3,14 +3,12 @@
 
 
 {% comment %}
-
 代码分成html、javascript、css三部分。
 HTML部分只有一行，用button标签表示了浮动按钮的容器。
 JavaScript部分主要用到了Jquery的语法。页面加载完成后开始监听两个事件：
 1、当用户点击浮动按钮时，将页面滚动到顶部
 2、当页面滚动时，根据页面距离顶部的距离，决定按钮显示或隐藏
 CSS部分最长但也很简单，主要定义了按钮的位置、大小、图案等样式。读者可以试着、改动、删除部分代码，看看按钮形态会怎样变化。
-
 {% endcomment %}
 
 <!-- 回到顶部浮动按钮 -->
@@ -35,11 +33,11 @@ CSS部分最长但也很简单，主要定义了按钮的位置、大小、图�
 <style>
     /* 按钮边框的大小、位置、样式 */
     .toTop-arrow {
-        width: 3.5rem;
-        height: 3.5rem;
+        width: 50px;
+        height: 50px;
         padding: 0;
         margin: 0;
-        /* margin-bottom: 100rem; */
+        margin-bottom: 60px;  /* [footer-height] */
         border: 0;
         border-radius: 33%;
         opacity: 0.7;
@@ -54,9 +52,9 @@ CSS部分最长但也很简单，主要定义了按钮的位置、大小、图�
     /* 绘制按钮中的向上箭头 */
     .toTop-arrow::before,
     .toTop-arrow::after {
-        width: 31px;
-        height: 7px;
-        border-radius: 3px;
+        width: 25px;
+        height: 5px;
+        border-radius: 10px;
         background: orange;
         position: absolute;
         content: "";
