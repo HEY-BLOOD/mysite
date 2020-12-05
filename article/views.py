@@ -273,7 +273,7 @@ def article_create(request):
 
 @login_required(login_url='/userprofile/login/')
 def article_delete(request, id):
-    """ 删除文章，此方式有 csrf 攻击风险 """
+    """ 删除文章，此方式有 csrf 攻击风险，已弃用 """
     # 根据 id（主键）获取需要删除的文章
     article = ArticlePost.objects.get(id=id)
     # 过滤已登录、但非文章作者的用户

@@ -28,7 +28,7 @@
                     {% if user == article.author %}
                     {# 防范CSRF攻击，即删除文章时用POST方法，并且校验csrf令牌 #}
                     · <a href="{% url "article:article_update" article.id %}">编辑</a>
-                    · <a href="#" onclick="confirm_delete()">删除</a>
+                    · <a href="#" onclick="confirm_safe_delete()">删除</a>
                     {# 新增一个隐藏的表单，用于安全删除文章 #}
                     <form style="display:none;" id="safe_delete"
                         action="{% url 'article:article_safe_delete' article.id %}" method="POST">
@@ -266,8 +266,8 @@
         // 刷新重定向页面定位到锚点
         window.location.replace(next_url + "#comment_elem_" + new_comment_id);
     };
-
-    // 删除文章的函数
+    
+    {% comment %} // 删除文章的函数，不安全，会被直接访问删除文章的链接
     function confirm_delete() {
         // 调用layer弹窗组件
         layer.open({
@@ -281,7 +281,7 @@
                 location.href = '{% url "article:article_delete" article.id %}'
             },
         })
-    }
+    } {% endcomment %}
     // 安全删除文章
     function confirm_safe_delete() {
         layer.open({
