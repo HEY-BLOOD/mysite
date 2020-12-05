@@ -4,8 +4,12 @@
             Copyright&nbsp;
             &copy;&nbsp;
             <a href="#">HEY-BLOOD</a>&nbsp;
-            2020&nbsp;
-            <a href="/admin">管理员后台</a>
+            2020
+            {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                    &nbsp;<a href="/admin">管理员后台</a>
+                {% endif %}
+            {% endif %}
         </p>
     </div>
 </footer>
