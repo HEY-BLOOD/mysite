@@ -42,7 +42,7 @@ def genaerate_data():
         i = None
         for i in range(1, 101):
             # 返回 2 个指定日期间的随机日期。三个参数分别是起始日期，终止日期和时区。
-            created_time = fake_date_time_between(
+            post_created = fake_date_time_between(
                 start_date='-1y',  # 1 年前
                 end_date="now",  # 终止日期为当下
                 tzinfo=get_current_timezone())
@@ -50,7 +50,7 @@ def genaerate_data():
                 title=fake_sentence().rstrip('.'),
                 # 用 2 个换行符连起来是为了符合 Markdown 语法，Markdown 中只有 2 个换行符分隔的文本才会被解析为段落
                 body='\n\n'.join(fake_paragraphs(randint(1, 20))),  # 10 个段落文本
-                created=created_time,
+                created=post_created,
                 author=user,
                 total_views=randint(10, i + 10),
                 column=column_list[i % len(column_list)],
@@ -61,9 +61,14 @@ def genaerate_data():
             post.tags.add(tags[0], tags[1], tags[2])
             post.save()
             # 为当前文章添加一些评论
+            # comment_created = fake_date_time_between(
+            #     start_date='-' + str((timezone_now() - post_created).days) + 'd',  # 文章发布后
+            #     end_date="now",  # 终止日期为当下
+            #     tzinfo=get_current_timezone())
             j = None
             for j in range(1, 6):
-                comment = comment_create(article=post, user=user, body='\n\n'.join(fake_paragraphs(j)), created=created_time)
+                # 评论时间默认为当前时间，因为 auto_now_add=True
+                comment = comment_create(article=post, user=user, body='\n\n'.join(fake_paragraphs(j)))
                 comment.save()
 
 
@@ -76,6 +81,7 @@ if __name__ == '__main__':
     django.setup()  # 启动 django
 
     from django.utils.timezone import get_current_timezone
+    # from django.utils.timezone import now as timezone_now
     from django.contrib.auth.models import User
     from article.models import ArticlePost
     from article.models import ArticleColumn

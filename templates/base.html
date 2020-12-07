@@ -10,7 +10,7 @@
     <!-- 页面自适应宽度 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {# 预留网站标题的位置 #}
-    <title>{% block header_title %}{% endblock %}</title>
+    <title>{% block head_title %}{% endblock head_title %}</title>
     <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
     <!-- 引入bootstrap的css文件 -->
     <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
@@ -23,7 +23,7 @@
     <!-- 自定义样式 -->
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
     {# 预留引入外链的位置 #}
-    {% block head_extra %}{% endblock head_extra %}
+    {% block extra_head %}{% endblock extra_head %}
 </head>
 
 <body>

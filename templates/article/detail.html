@@ -3,9 +3,9 @@
 {% load staticfiles %}
 
 {# 写入 base.html 中定义的 title #}
-{% block header_title %}
+{% block head_title %}
 {{ article.title }}
-{% endblock header_title %}
+{% endblock head_title %}
 
 {# 写入 base.html 中定义的 content #}
 {% block content %}
@@ -224,7 +224,7 @@
 
 {% block script %}
 <!-- csrf token -->
-<script src="{% static 'csrf.js' %}"></script>
+<script src="{% static 'js/csrf.js' %}"></script>
 
 <!-- 引入粘性侧边栏 -->
 <script src="{% static 'sticky_sidebar/jquery.sticky-sidebar.min.js' %}"></script>
