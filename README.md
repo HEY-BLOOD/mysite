@@ -48,30 +48,11 @@ $ python -m scripts.fake
 
 如果需要配置邮件服务的话，可以将 `.env.example` 文件拷贝一份并保存为 `.env`，并根据你自己的邮件服务进行配置。
 
-```
-# 密钥
-SECRET_KEY=your_secret_key
-
-# SMTP服务器配置，以 QQ邮箱为例
-# django.core.exceptions.ImproperlyConfigured: Set the EMAIL_HOST environment variable
-EMAIL_HOST=smtp.qq.com
-# 改为自己的邮箱名
-EMAIL_HOST_USER=your_email_account@xxx.com
-# 邮箱密码（授权码）
-EMAIL_HOST_PASSWORD=your_password
-# 发送邮件的端口，不通请尝试 465 或 587 端口。
-EMAIL_PORT=25
-# 是否使用 TLS
-EMAIL_USE_TLS=True
-# 默认的发件人
-DEFAULT_FROM_EMAIL=发件人昵称<your_email_account@xxx.com>'
-```
-
 说明：
 
-1. 配置文件中的 `EMAIL_HOST`（SMTP 服务器地址）在这里并没有作用（具体是什么原因还不知道），所以请直接在 `mysite/mysite/settings/common.py` 文件中找到 `EMAIL_HOST` 常量未其赋值即可，如：`EMAIL_HOST = 'smtp.aliyun.com'`。
+1. 配置文件中的 `EMAIL_HOST`（SMTP 服务器地址）在这里并没有作用（具体是什么原因还不知道），所以请直接在 `mysite/mysite/settings/common.py` 文件中找到 `EMAIL_HOST` 常量为其赋值即可，如：`EMAIL_HOST = 'smtp.qq.com'`。
 2. `.env` 文件中的 `EMAIL_HOST_PASSWORD` （邮箱密码或授权码）需要注意，确定你所使用的 SMTP 服务器使用需要邮箱密码还是授权码。
-3. 其余的配置跟着改成自己的就行了。
+3. 其余的配置跟着改成自己的就行了，**注意**，`.env`文件中不要出现中文。
 
 ## 运行
 
@@ -82,4 +63,3 @@ $ python manage.py runserver 127.0.0.1:8000
 ```
 
 在浏览器中输入地址 http://127.0.0.1:8000 来访问它。
-

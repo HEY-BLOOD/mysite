@@ -22,7 +22,7 @@ def genaerate_data():
     locales = ['', 'zh_CN']
     luanguages = ['English', 'Chinese']
     for locale, language in zip(locales, luanguages):
-        print("Now, Generate some virtual data in {} ...".format(language))
+        print("\nNow, Generate some virtual data in {} ...".format(language))
         fake = faker.Faker(locale=locale)  # 创建 Fake对象，设置语言
         # 消除属性访问
         fake_date_time_between = fake.date_time_between
@@ -40,7 +40,7 @@ def genaerate_data():
 
         print("Create some tagged articles and comments ...")
         i = None
-        for i in range(1, 101):
+        for i in range(1, 100):
             # 返回 2 个指定日期间的随机日期。三个参数分别是起始日期，终止日期和时区。
             post_created = fake_date_time_between(
                 start_date='-1y',  # 1 年前
@@ -66,7 +66,7 @@ def genaerate_data():
             #     end_date="now",  # 终止日期为当下
             #     tzinfo=get_current_timezone())
             j = None
-            for j in range(1, 6):
+            for j in range(1, 3):
                 # 评论时间默认为当前时间，因为 auto_now_add=True
                 comment = comment_create(article=post, user=user, body='\n\n'.join(fake_paragraphs(j)))
                 comment.save()
@@ -99,5 +99,5 @@ if __name__ == '__main__':
     # 生成虚拟文章和评论
     genaerate_data()
 
-    print('done!')
     print("It ran for {} seconds.".format(perf_counter() - start))
+    print('done!')

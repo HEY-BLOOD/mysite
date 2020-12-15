@@ -10,20 +10,14 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 
 # Create your models here.
-class Comment(MPTTModel):
+class Comment(MPTTModel, models.Model):
     """
     博文的评论，继承自 django-mptt的 MPTTModel
     """
     # 被评论的博文，由于一篇文章可以有很多评论，所以是一对多的外键关系
-    article = models.ForeignKey(ArticlePost,
-                                on_delete=models.CASCADE,
-                                related_name='comments',
-                                verbose_name='文章')
+    article = models.ForeignKey(ArticlePost, on_delete=models.CASCADE, related_name='comments', verbose_name='文章')
     # 评论的发布者，任何登录的用户都可以进行评论，
-    user = models.ForeignKey(User,
-                             on_delete=models.CASCADE,
-                             related_name='comments',
-                             verbose_name='用户')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments', verbose_name='用户')
     # 评论内容，改为使用富文本编辑器
     # body = models.TextField('评论内容')
     body = RichTextField('评论内容')
@@ -47,10 +41,10 @@ class Comment(MPTTModel):
     # 替换 Meta 为 MPTTMeta
     class MPTTMeta:
         order_insertion_by = ['-created']  # 降序排列
-        # 原 Meta的元数据
-        # db_table = "tb_comment"
-        # verbose_name = '评论'  # 管理后台中显示的模型名
-        # verbose_name_plural = verbose_name  # 管理后台中显示的模型名复数形式
+        # 原来 Meta的元数据
+        db_table = "tb_comment"
+        verbose_name = '评论'  # 管理后台中显示的模型名
+        verbose_name_plural = verbose_name  # 管理后台中显示的模型名复数形式
 
     def __str__(self):
         return self.body[:20]

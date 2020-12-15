@@ -23,8 +23,8 @@ class Profile(models.Model):
     bio = models.TextField('个人简介', max_length=500, blank=True)
 
     class Meta:
-        # db_table = "tb_comment"
-        verbose_name = '扩展信息'
+        db_table = "tb_userprofile"
+        verbose_name = '扩展'
         verbose_name_plural = verbose_name
 
     def __str__(self):
