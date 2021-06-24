@@ -1,10 +1,11 @@
+import article
 import os
 import sys
 
 import django
 
 import faker
-from random import randint
+from random import randint, choice
 
 # 将项目根目录添加到 Python 的模块搜索路径中
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -17,6 +18,7 @@ def genaerate_data():
     article_create = ArticlePost.objects.create
     column_create = ArticleColumn.objects.create
     comment_create = Comment.objects.create
+    collection_create = ArticleCollect.objects.create
 
     print('Some articles and comments will be created, which may take a little time.')
     locales = ['', 'zh_CN']
@@ -41,6 +43,8 @@ def genaerate_data():
         print("Create some tagged articles and comments ...")
         i = None
         for i in range(1, 100):
+            random_user = choice(users)
+
             # 返回 2 个指定日期间的随机日期。三个参数分别是起始日期，终止日期和时区。
             post_created = fake_date_time_between(
                 start_date='-1y',  # 1 年前
@@ -51,7 +55,7 @@ def genaerate_data():
                 # 用 2 个换行符连起来是为了符合 Markdown 语法，Markdown 中只有 2 个换行符分隔的文本才会被解析为段落
                 body='\n\n'.join(fake_paragraphs(randint(1, 20))),  # 10 个段落文本
                 created=post_created,
-                author=user,
+                author=random_user,
                 total_views=randint(10, i + 10),
                 column=column_list[i % len(column_list)],
                 # tags=[fake_word() for _ in range(3)],
@@ -68,9 +72,11 @@ def genaerate_data():
             j = None
             for j in range(1, 3):
                 # 评论时间默认为当前时间，因为 auto_now_add=True
-                comment = comment_create(article=post, user=user, body='\n\n'.join(fake_paragraphs(j)))
+                comment = comment_create(article=post, user=random_user, body='\n\n'.join(fake_paragraphs(j)))
                 comment.save()
-
+            # 收藏一些文章
+            collection = collection_create(user=choice(users), article=post)
+            collection.save()
 
 if __name__ == '__main__':
     from time import perf_counter
@@ -85,6 +91,7 @@ if __name__ == '__main__':
     from django.contrib.auth.models import User
     from article.models import ArticlePost
     from article.models import ArticleColumn
+    from article.models import ArticleCollect
     from comment.models import Comment
 
     print('clear database.')
@@ -93,8 +100,14 @@ if __name__ == '__main__':
     User.objects.all().delete()
     Comment.objects.all().delete()
 
-    print('create a superuser.')
-    user = User.objects.create_superuser('admin', '', 'admin')
+    print('create some superuser.')
+    users = []
+    for i in range(3):
+        uname = f'admin{i}'
+        email = f'{uname}@email.com'
+        u = User.objects.create_superuser(uname, email, uname)
+        users.append(u)
+    print(users)
 
     # 生成虚拟文章和评论
     genaerate_data()
