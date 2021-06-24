@@ -31,7 +31,7 @@ class ArticleColumn(models.Model):
         # ordering = ('-created', )
         # 定义 Model在数据库中的表名，默认为 app名_模型名
         db_table = "tb_column"
-        verbose_name = '栏目'  # 管理后台中显示的模型名
+        verbose_name = '类别管理'  # 管理后台中显示的模型名
         verbose_name_plural = verbose_name  # 管理后台中显示的模型名复数形式
 
     def get_remainder(self):
@@ -105,9 +105,27 @@ class ArticlePost(models.Model):
         ordering = ('-created', )
         # 定义 Model在数据库中的表名，默认为 app名_模型名
         db_table = "tb_article"
-        verbose_name = '文章'  # 管理后台中显示的模型名
+        verbose_name = '文章管理'  # 管理后台中显示的模型名
         verbose_name_plural = verbose_name  # 管理后台中显示的模型名复数形式
 
     def __str__(self):
         # 将文章标题返回
         return self.title
+
+class ArticleCollect(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, verbose_name='收藏用户',)
+    collected_time = models.DateTimeField('收藏时间', auto_now=True)  # （不可编辑字段）
+    article = models.ForeignKey(to=ArticlePost,on_delete=models.CASCADE, verbose_name='收藏文章')
+
+    def __str__(self):
+        # 将文章标题返回
+        return self.article.title
+
+    class Meta:
+        # ordering 指定模型返回的数据的排列顺序
+        # '-collected_time' 表明数据应该以 收藏时间倒序排列
+        ordering = ('-collected_time', )
+        # 定义 Model在数据库中的表名，默认为 app名_模型名
+        db_table = "tb_article_collect"
+        verbose_name = '收藏管理'  # 管理后台中显示的模型名
+        verbose_name_plural = verbose_name  # 管理后台中显示的模型名复数形式

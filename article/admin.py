@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ArticlePost, ArticleColumn
+from .models import ArticlePost, ArticleColumn, ArticleCollect
 
 
 # Register your models here.
@@ -19,4 +19,11 @@ class ArticleColumnAdmin(admin.ModelAdmin):
     """  文章栏目（分类）模型管理   """
     list_display = ['title', 'created']
     fields = []  # 默认全部
+    list_per_page = 20
+
+
+@admin.register(ArticleCollect)
+class ArticleCollectAdmin(admin.ModelAdmin):
+    # 表格显示的字段
+    list_display = ['article', 'user', 'collected_time']
     list_per_page = 20
