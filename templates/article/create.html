@@ -6,8 +6,8 @@
 {% block head_title %} 写文章 {% endblock head_title %}
 
 {% block extra_head %}
-    <!-- 引入mdeditor编辑器的样式 -->
-    <link rel="stylesheet" href="{% static 'mdeditor/css/editormd.min.css' %}">
+<!-- 引入mdeditor编辑器的样式 -->
+<link rel="stylesheet" href="{% static 'mdeditor/css/editormd.min.css' %}">
 {% endblock extra_head %}
 
 {% block content %}
@@ -38,7 +38,7 @@
                     <select class="form-control col-3" id="column" name="column">
                         <option value="none">请选择栏目..</option>
                         {% for column in columns %}
-                            <option value="{{ column.id }}">{{ column }}</option>
+                        <option value="{{ column.id }}">{{ column }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -54,12 +54,12 @@
                     <label for="body">文章正文</label>
                     <!-- 文本区域 -->
                     {# 改用 mdeditor编写正文 #}
-                    <div class="wmd-wrapper"  id="id_body-wmd-wrapper">
-                        <textarea  cols="40" id="id_body" name="body" rows="10" required></textarea>
+                    <div class="wmd-wrapper" id="id_body-wmd-wrapper">
+                        <textarea cols="40" id="id_body" name="body" rows="10" required></textarea>
                     </div>
                 </div>
                 <!-- 提交按钮 -->
-                <button type="submit" class="btn btn-primary">完成</button>
+                <button type="submit" class="btn btn-primary float-right">完成</button>
             </form>
         </div>
     </div>
@@ -68,8 +68,8 @@
 
 
 {% block script %}
-    <!-- 引入mdeditor编辑器的静态资源 -->
-    <script src="{% static 'mdeditor/js/editormd.min.js' %}"></script>
-    <!-- 文章正文 mdeditor编辑器控件的渲染 -->
-    <script src="{% static 'mdeditor/id_body-wmd-wrapper.js' %}"></script>
+<!-- 引入mdeditor编辑器的静态资源 -->
+<script src="{% static 'mdeditor/js/editormd.min.js' %}"></script>
+<!-- 文章正文 mdeditor编辑器控件的渲染 -->
+<script src="{% static 'mdeditor/id_body-wmd-wrapper.js' %}"></script>
 {% endblock script %}

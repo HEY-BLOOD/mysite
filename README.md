@@ -4,6 +4,8 @@
 
 基于 Python 3.7、Django 2.2、Bootstrap 4
 
+[![simpleui](https://img.shields.io/badge/developing%20with-Simpleui-2077ff.svg)](https://github.com/newpanjing/simpleui)
+
 ## 安装
 
 **1. 克隆仓库：**
