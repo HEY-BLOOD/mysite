@@ -1,4 +1,5 @@
 from django.urls import path
+
 from . import views
 
 # 正在部署的应用的名称
@@ -30,4 +31,6 @@ urlpatterns = [
     # path('article-create/', views.ArticleCreateView.as_view(), name='article_create'),
     # 文章点赞 +1
     path('increase-likes/<int:id>/', views.IncreaseLikesView.as_view(), name='increase_likes'),
+    path('collected-articles/', views.CollectedListView.as_view(), name='collected_articles')
+    # path('collected-articles/', views.article_collected, name='collected_articles')
 ]

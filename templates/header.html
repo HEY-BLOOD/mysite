@@ -20,6 +20,12 @@
 
                 {# Django的 if 模板语句 #}
                 {% if user.is_authenticated %}
+
+                <li class="nav-item">
+                    {# 模板解耦语法，根据 app的名称，反向解析到对应的url #}
+                    <a class="nav-link" href="{% url 'article:collected_articles' %}">我的收藏</a>
+                </li>
+
                 {# 如果用户已经登录，则显示用户名下拉框 #}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"

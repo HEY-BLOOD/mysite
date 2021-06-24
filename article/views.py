@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, request
 from django.contrib.auth.models import User
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth.decorators import login_required
 # 引入分页模块
 from django.core.paginator import Paginator
@@ -13,7 +14,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.shortcuts import get_object_or_404
 # 消息闪现模块
 from django.contrib import messages
-from .models import ArticlePost, ArticleColumn
+from .models import ArticleCollect, ArticlePost, ArticleColumn
 from comment.models import Comment
 from .forms import ArticlePostForm
 from comment.forms import CommentForm
@@ -362,3 +363,21 @@ class IncreaseLikesView(View):
         article.likes += 1
         article.save()
         return HttpResponse('success')
+
+
+class CollectedListView(ListView):
+    """
+    文章收藏列表类视图
+    """
+    # 查询集的名称（上下文的名称）
+    context_object_name = 'collections'
+    # 模板位置
+    template_name = 'article/collected.html'
+    paginate_by = 20
+
+    def get_queryset(self):
+        # 获取请求中的搜索关键字和排序参数
+        now_user = self.request.user
+        print("===============",now_user.__repr__)
+        queryset = ArticleCollect.objects.filter(user=now_user)
+        return queryset
