@@ -31,6 +31,7 @@ urlpatterns = [
     # path('article-create/', views.ArticleCreateView.as_view(), name='article_create'),
     # 文章点赞 +1
     path('increase-likes/<int:id>/', views.IncreaseLikesView.as_view(), name='increase_likes'),
-    path('collected-articles/', views.CollectedListView.as_view(), name='collected_articles')
-    # path('collected-articles/', views.article_collected, name='collected_articles')
+    path('collected-articles/', views.CollectedListView.as_view(), name='collected_articles'),
+    path('add_collection/<int:article_id>/', views.add_collection, name='add_collection'),
+    path('cancel_collection/<int:article_id>/', views.cancel_collection, name='cancel_collection'),
 ]

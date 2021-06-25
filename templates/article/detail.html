@@ -16,19 +16,23 @@
 <!-- 文章详情 -->
 <div class="container">
     <div class="row">
-
         <div class="col-9">
+            
             <!-- 标题及作者 -->
-            <h1 class="mt-4 mb-4">{{ article.title }}</h1>
+            <h2 class="mt-4 mb-4">{{ article.title }}</h2>
             <div class="alert alert-success">
                 <div>
-                    作者：{{ article.author }}
+                    <!-- 显示文章的作者和浏览量 -->
+                    作者：{{ article.author }}&nbsp;|&nbsp;浏览：{{ article.total_views }}
+                    <br>
+                    时间：{{ article.created|date:"Y-m-d H:i:s" }}
+                    <br>
                     {% comment %} 文章操作权限，登录的用户只能对自己发表的文章进行删除或修改，
                     如果文章不是已登录用户发布的，则不显示删除和修改链接 {% endcomment %}
                     {% if user == article.author %}
                     {# 防范CSRF攻击，即删除文章时用POST方法，并且校验csrf令牌 #}
-                    · <a href="{% url "article:article_update" article.id %}">编辑</a>
-                    · <a href="#" onclick="confirm_safe_delete()">删除</a>
+                    <a href="{% url 'article:article_update' article.id %}">编辑</a>&nbsp;|&nbsp;
+                    <a href="#" onclick="confirm_safe_delete()">删除</a>&nbsp;|&nbsp;
                     {# 新增一个隐藏的表单，用于安全删除文章 #}
                     <form style="display:none;" id="safe_delete"
                         action="{% url 'article:article_safe_delete' article.id %}" method="POST">
@@ -36,22 +40,34 @@
                         <button type="submit">发送</button>
                     </form>
                     {% endif %}
-                </div>
-                <div>
-                    <!-- 显示文章的浏览量 -->
-                    浏览：{{ article.total_views }}
-                    {# 时间：{{ article.created|date:"Y-m-d H:i:s" }} #}
+
+                    {% if user.is_authenticated %}
+                        {% if collection %}
+                        <!-- 当前文章已经被登录用户收藏 -->
+                        <a id="cancel_collection" href="#" onclick="add_or_cancel_collection({{article.id}},false);">取消收藏
+                            <i class="fas fa-star"></i>
+                        </a>
+                        {% else %}
+                        <!-- 当前文章还未被登录用户收藏 -->
+                        <a id="add_collection" href="#" onclick="add_or_cancel_collection({{article.id}},true);">加入收藏
+                            <i class="far fa-star"></i>
+                        </a>
+                        {% endif %}
+                        {% else %}
+                        <a href="{% url 'userprofile:login' %}">登录</a>后收藏
+                        {% endif %}
                 </div>
             </div>
 
             <!-- 文章正文 -->
-            <div class="col-12">
+            <div>
                 {# 不进行转义 #}
-                <p>{{ article.body|safe }}</p>
+                {{ article.body|safe }}
             </div>
 
             <!-- 文章点赞按钮 -->
-            <div style="text-align:center;" class="mt-4">
+            <br>
+            <div class="mt-4 text-center">
                 <button class="btn btn-outline-danger" type="button" onclick="validate_is_like(
                      '{% url 'article:increase_likes' article.id %}',
                      {{ article.id }},
@@ -71,14 +87,14 @@
             <br>
             <div class="row justify-content-end">
                 {% if next_article %}
-                <div class="col-auto mr-auto">
+                <div class="mr-auto">
                     <a href="{{ next_article.get_absolute_url }}" class="btn btn-info">
                         &laquo;&nbsp;{{ next_article.title }}
                     </a>
                 </div>
                 {% endif %}
                 {% if pre_article %}
-                <div class="col-auto">
+                <div>
                     <a href="{{ pre_article.get_absolute_url }}" class="btn btn-info">
                         {{ pre_article.title }}&raquo;&nbsp;
                     </a>
@@ -87,9 +103,9 @@
             </div>
 
             <!-- 发表评论 -->
+            <br>
             <div>
-                <hr>
-                {% if user.is_authenticated %}
+            {% if user.is_authenticated %}
                 <form action="{% url 'comment:post_comment' article.id %}" method="POST">
                     {% csrf_token %}
                     <div class="form-group">
@@ -103,23 +119,24 @@
                         <div>
                             {{ comment_form.media }}
                             {{ comment_form.body }}
+
+                            <!-- <div class="django-ckeditor-widget" data-field-id="id_body">
+                                <textarea cols="40" id="id_body" name="body" rows="10" required></textarea>
+                            </div> -->
                         </div>
                     </div>
                     <!-- 提交按钮 -->
                     <button type="submit" class="btn btn-primary ">发送</button>
                 </form>
-                <br>
                 {% else %}
-                <br>
                 <h5 class="row justify-content-center">
                     请<a href="{% url 'userprofile:login' %}">登录</a>后评论
                 </h5>
-                <br>
-                {% endif %}
+            {% endif %}
             </div>
 
             <!-- 显示评论 -->
-            <div class="col-12">
+            <div>
                 <br>
                 {% load mptt_tags %}
                 <h4>共有{{ comments.count }}条评论</h4>
@@ -215,6 +232,7 @@
             }
         </style>
 
+        </div>
     </div>
 </div>
 
@@ -228,6 +246,7 @@
 
 <!-- 引入粘性侧边栏 -->
 <script src="{% static 'sticky_sidebar/jquery.sticky-sidebar.min.js' %}"></script>
+
 <script type="text/javascript">
     $('#sidebar').stickySidebar({
         topSpacing: 20,
@@ -266,7 +285,7 @@
         // 刷新重定向页面定位到锚点
         window.location.replace(next_url + "#comment_elem_" + new_comment_id);
     };
-    
+
     {% comment %} // 删除文章的函数，不安全，会被直接访问删除文章的链接
     function confirm_delete() {
         // 调用layer弹窗组件
@@ -282,6 +301,7 @@
             },
         })
     } {% endcomment %}
+
     // 安全删除文章
     function confirm_safe_delete() {
         layer.open({
@@ -326,7 +346,7 @@
                         storage_json_data[id] = true;
                     } catch (e) {
                         window.localStorage.clear();
-                    };
+                    }
                     // 将字典转换为字符串，以便存储到 LocalStorage
                     const d = JSON.stringify(storage_json_data);
                     // 尝试存储点赞数据到 LocalStorage
@@ -338,7 +358,7 @@
                             window.localStorage.clear();
                             storage.setItem("my_blog_data", d);
                         }
-                    };
+                    }
                 } else {
                     layer.msg("与服务器通信失败..过一会儿再试试呗~");
                 }
@@ -362,11 +382,24 @@
         };
     };
 
+    function add_or_cancel_collection(article_id, add_or_cancel) {
+        // add
+        if (add_or_cancel) {
+            $.post("{% url 'article:add_collection' article.id %}", function (data, status) {
+                alert("Data: " + data + "\nStatus: " + status);
+            });
+        } else {
+            // cancel
+            $.post("{% url 'article:cancel_collection' article.id %}", function (data, status) {
+                alert("Data: " + data + "\nStatus: " + status);
+            });
+        }
+        location.reload();
+    }
+
+
+
     // 消息闪现弹窗
-    {% if messages %}
-    {% for msg in messages %}
-    layer.msg('{{ msg }}');
-    {% endfor %}
-    {% endif %}
+   
 </script>
 {% endblock script %}

@@ -186,6 +186,14 @@ def article_detail(request, id):
     # 为评论引入表单
     comment_form = CommentForm()
 
+    # 查询当前文章是否已经被登录用户所收藏
+    collection = None
+    if (not isinstance(request.user, AnonymousUser)):
+        try:
+            collection = ArticleCollect.objects.get(user=request.user, article=article)
+        except ArticleCollect.DoesNotExist:
+            collection = None
+
     # 需要传递给模板的对象
     context = {
         'article': article,
@@ -194,6 +202,7 @@ def article_detail(request, id):
         'pre_article': pre_article,
         'next_article': next_article,
         'comment_form': comment_form,
+        'collection': collection
     }
     # 载入模板，并返回context对象
     return render(request, 'article/detail.html', context)
@@ -381,3 +390,25 @@ class CollectedListView(ListView):
         print("===============",now_user.__repr__)
         queryset = ArticleCollect.objects.filter(user=now_user)
         return queryset
+
+
+@login_required(login_url='/userprofile/login/')
+def add_collection(request, article_id):
+    try:
+        article = ArticlePost.objects.get(id=article_id)
+        collection = ArticleCollect(user=request.user, article=article)
+        collection.save()
+    except Exception as e:
+        raise  e
+    return HttpResponse("加入收藏")
+
+
+@login_required(login_url='/userprofile/login/')
+def cancel_collection(request, article_id):
+    try:
+        article = ArticlePost.objects.get(id=article_id)
+        collection = ArticleCollect.objects.get(user=request.user, article=article)
+        collection.delete()
+    except Exception as e:
+        raise e
+    return HttpResponse("取消收藏")
